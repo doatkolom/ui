@@ -471,9 +471,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .doatkolom-ui .static {
   position: static;
 }
-.doatkolom-ui .absolute {
-  position: absolute;
-}
 .doatkolom-ui .relative {
   position: relative;
 }
@@ -520,17 +517,11 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .doatkolom-ui .h-2 {
   height: 0.5rem;
 }
-.doatkolom-ui .h-full {
-  height: 100%;
-}
-.doatkolom-ui .h-5 {
-  height: 1.25rem;
-}
 .doatkolom-ui .h-14 {
   height: 3.5rem;
 }
-.doatkolom-ui .min-h-\[38rem\] {
-  min-height: 38rem;
+.doatkolom-ui .h-full {
+  height: 100%;
 }
 .doatkolom-ui .min-h-\[30rem\] {
   min-height: 30rem;
@@ -541,14 +532,11 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .doatkolom-ui .w-10 {
   width: 2.5rem;
 }
-.doatkolom-ui .w-1\/5 {
-  width: 20%;
-}
-.doatkolom-ui .w-4\/5 {
-  width: 80%;
-}
 .doatkolom-ui .w-\[calc\(100\%\+1px\)\] {
   width: calc(100% + 1px);
+}
+.doatkolom-ui .w-1\/5 {
+  width: 20%;
 }
 .doatkolom-ui .w-\[calc\(80\%-1px\)\] {
   width: calc(80% - 1px);
@@ -568,14 +556,8 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .doatkolom-ui .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
-.doatkolom-ui .content-center {
-  align-content: center;
-}
 .doatkolom-ui .items-stretch {
   align-items: stretch;
-}
-.doatkolom-ui .justify-center {
-  justify-content: center;
 }
 .doatkolom-ui .gap-4 {
   gap: 1rem;
@@ -624,16 +606,16 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .doatkolom-ui .border-b {
   border-bottom-width: 1px;
 }
-.doatkolom-ui .border-gray-200 {
+.doatkolom-ui .border-black {
   --tw-border-opacity: 1;
-  border-color: rgb(229 231 235 / var(--tw-border-opacity));
+  border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 .doatkolom-ui .border-transparent {
   border-color: transparent;
 }
-.doatkolom-ui .border-black {
+.doatkolom-ui .border-gray-200 {
   --tw-border-opacity: 1;
-  border-color: rgb(0 0 0 / var(--tw-border-opacity));
+  border-color: rgb(229 231 235 / var(--tw-border-opacity));
 }
 .doatkolom-ui .bg-slate-200 {
   --tw-bg-opacity: 1;
@@ -667,10 +649,4 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .doatkolom-ui .text-left {
   text-align: left;
-}
-@media (min-width: 768px) {
-
-  .md\:h-14 {
-    height: 3.5rem;
-  }
 }

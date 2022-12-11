@@ -1,44 +1,88 @@
+var DoatKolomUiUtils = {
+	pulse: `<div class="p-4 w-full mx-auto">
+	<div class="animate-pulse flex space-x-4">
+		<div class="rounded-full bg-slate-200 h-10 w-10"></div>
+		<div class="flex-1 space-y-6 py-1">
+			<div class="h-2 bg-slate-200 rounded"></div>
+			<div class="space-y-3">
+				<div class="grid grid-cols-3 gap-4">
+					<div class="h-2 bg-slate-200 rounded col-span-2"></div>
+					<div class="h-2 bg-slate-200 rounded col-span-1"></div>
+				</div>
+				<div class="h-2 bg-slate-200 rounded"></div>
+			</div>
+		</div>
+	</div>
+</div>`,
+}
 var DoatKolomUi = {
-	tab: function (tab_id, data_key, tab_button_bind_key, tablist_bind_key) {
+	tab: function (Identifiers, settings, tabs) {
 		document.addEventListener('alpine:init', () => {
-			Alpine.data(data_key, () => ({
+			Alpine.data(Identifiers.dataKey, () => ({
+				tabs: {},
+				tabId: Identifiers.tabId,
+				settings: settings,
 				selectedId: null,
 				contents: {},
-				is_requesting_content: false,
+				isfetchingContent: false,
 				pulse: '',
 				init() {
 					this.$nextTick(() => {
-						var pulseDocument = document.querySelector(`.${tab_id}-pulse`);
-						this.pulse = pulseDocument.innerHTML;
-						pulseDocument.remove();
-						return this.select(this.$id(tab_id, 2))
+						this.select(this.$id(Identifiers.tabId, 1))
 					})
 				},
 				select(id) {
-					this.fetchContent(id);
+					this.content(id);
 					this.selectedId = id
 				},
 				isSelected(id) { return this.selectedId === id },
-				whichChild(el, parent) { return Array.from(parent.children).indexOf(el) + 1 },
-				fetchContent(id) {
-					if (!this.is_requesting_content) {
-						var data = JSON.parse(document.querySelector('#' + id).dataset.content);
-						var item_id = id.substr(id.length - 1);
-						if (data.url && (this.contents[item_id] === undefined || data.content_cache === false)) {
-							var contentArea = document.querySelector(`[aria-labelledby="${id}"]`);
-							contentArea.innerHTML = this.pulse;
-							this.is_requesting_content = true;
-							fetch(data.url, data.options)
-								.then(res => res.text())
-								.then(content => {
-									content = this.htmlToDocument(content);
-									this.appendContent(content, item_id, contentArea);
-								});
+				whichChild(el, parent) { return Array.from(parent.children).indexOf(el) },
+				getIndexFromId(id) {
+					return id.substr(id.length - 1)
+				},
+				content(id) {
+					if (!this.isfetchingContent) {
+						var index = parseInt(this.getIndexFromId(id)) - 1;
+						var tab = this.tabs[index];
+						var contentArea = document.querySelector(`[aria-labelledby="${id}"]`);
+						this.isfetchingContent = true;
+						if (this.contents[index] === undefined) {
+							if (tab.content_api) {
+								contentArea.innerHTML = DoatKolomUiUtils.pulse;
+								this.fetchContent(tab, index, contentArea);
+							} else {
+								this.appendContent(tab.content, index, contentArea);
+							}
+						} else if (tab.content_api && tab.content_cache === false) {
+							contentArea.innerHTML = DoatKolomUiUtils.pulse;
+							this.fetchContent(tab, index, contentArea);
 						}
 					}
 				},
-				appendContent(content, item_id, contentArea) {
+				fetchContent(tab, index, contentArea) {
+					fetch(tab.content_api, tab.content_api_options)
+						.then(res => res.text())
+						.then(content => {
+							this.appendContent(content, index, contentArea);
+						});
+				},
+				getPositionClasses(elementName, classes) {
+					switch (this.settings.position) {
+						case 'top':
+							if ('tab_button' == elementName) {
+								return ' border-t border-l border-r rounded-t-md inline-flex ' + classes;
+							}
+						case 'left':
+							if ('tab_button' == elementName) {
+								return ' border-t border-l border-b w-[calc(100%+1px)] text-left h-14 ' + classes;
+							}
+						default:
+							return classes;
+					}
+				},
+				appendContent(content, index, contentArea) {
 					contentArea.innerHTML = '';
+					content = this.htmlToDocument(content);
 					contentArea.appendChild(content.contentDocument);
 
 					content.scripts.forEach(script => {
@@ -47,8 +91,8 @@ var DoatKolomUi = {
 						contentArea.appendChild(scriptDocument);
 					});
 
-					this.contents[item_id] = { content, is_fetch: true };
-					this.is_requesting_content = false;
+					this.contents[index] = { content, is_fetch: true };
+					this.isfetchingContent = false;
 				},
 				htmlToDocument(html) {
 					var contentDocument = document.createElement("div");
@@ -61,7 +105,11 @@ var DoatKolomUi = {
 					return { contentDocument, scripts };
 				}
 			}))
-			Alpine.bind(tablist_bind_key, () => ({
+
+			/**
+			 * Keyboard focus
+			 */
+			Alpine.bind(Identifiers.tablistBind, () => ({
 				['x-ref']: 'tablist',
 				['@keydown.right.prevent.stop']() { this.$focus.wrap().next() },
 				['@keydown.home.prevent.stop']() { this.$focus.first() },
@@ -70,9 +118,13 @@ var DoatKolomUi = {
 				['@keydown.end.prevent.stop']() { this.$focus.last() },
 				['@keydown.page-down.prevent.stop']() { this.$focus.last() }
 			}))
-			Alpine.bind(tab_button_bind_key, () => ({
+
+			/**
+			 * Tab selector actions
+			 */
+			Alpine.bind(Identifiers.tablistButtonBind, () => ({
 				[':id']() {
-					return this.$id(tab_id, this.whichChild(this.$el.parentElement, this.$refs.tablist))
+					return this.$id(Identifiers.tabId, this.whichChild(this.$el.parentElement, this.$refs.tablist))
 				},
 				['@click']() {
 					this.select(this.$el.id);

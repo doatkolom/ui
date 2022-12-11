@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/**'
+    './src/**',
+    './assets/js/doatkolom-ui.js',
   ],
   theme: {
     extend: {},
