@@ -14,4 +14,25 @@ class Common
         }
         return strtolower( $randomString );
     }
+
+    public static function contentBuffer( array $items )
+    {
+        foreach ( $items as $key => $tab ) {
+
+            ob_start();
+
+            if ( isset( $items[$key]['content'] ) ) {
+                $items[$key]['content']();
+            }
+            $content = ob_get_clean();
+
+            $items[$key]['content'] = $content;
+
+            if ( isset( $items[$key]['contentCache'] ) ) {
+                $items[$key]['contentCache'] = false;
+            }
+        }
+
+        return $items;
+    }
 }

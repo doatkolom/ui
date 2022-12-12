@@ -4,31 +4,29 @@ namespace DoatKolom\Ui\Components;
 
 use DoatKolom\Ui\Utils\Common;
 
-class Tab
+class Tab extends ComponentBase
 {
 	protected $identifiers;
 	protected $settings;
 	protected $tabs;
 
-	public function render( array $settingArgs, array $tabs )
+	public function setIdentifiers()
 	{
-		$this->start( $settingArgs, $tabs );
-		$this->content();
-		$this->end();
+		$this->identifiers = [
+			'tabId'             => Common::generateRandomString( 10 ),
+			'dataKey'           => Common::generateRandomString( 10 ),
+			'tablistBind'       => Common::generateRandomString( 10 ),
+			'tablistButtonBind' => Common::generateRandomString( 10 )
+		];
 	}
 
 	public function start( array $settingArgs, array $tabs )
 	{
-		$tabId             = Common::generateRandomString( 10 );
-		$dataKey           = Common::generateRandomString( 10 );
-		$tablistBind       = Common::generateRandomString( 10 );
-		$tablistButtonBind = Common::generateRandomString( 10 );
-		$this->identifiers = compact( 'dataKey', 'tabId', 'tablistBind', 'tablistButtonBind' );
-
 		$settings = [
-			'init'     => isset( $settingArgs['init'] ) ? $settingArgs['init'] : true,
-			'position' => $settingArgs['position'],
-			'classes'  => $this->positionClasses( $settingArgs['position'] )
+			'init'       => isset( $settingArgs['init'] ) ? $settingArgs['init'] : true,
+			'position'   => $settingArgs['position'],
+			'selectedId' => isset( $settingArgs['selectedId'] ) ? $settingArgs['selectedId'] : 1,
+			'classes'    => $this->positionClasses( $settingArgs['position'] )
 		];
 
 		if ( !empty( $settingArgs['classes'] ) ) {
@@ -40,36 +38,9 @@ class Tab
 		}
 
 		$this->settings = $settings;
+		$this->tabs     = Common::contentBuffer($tabs);
 
-		foreach ( $tabs as $key => $tab ) {
-
-			ob_start();
-
-			if ( isset( $tabs[$key]['content'] ) ) {
-				$tabs[$key]['content']();
-			}
-
-			$content = ob_get_clean();
-
-			$tabs[$key]['content'] = $content;
-
-			if ( isset( $tabs[$key]['contentCache'] ) ) {
-				$tabs[$key]['contentCache'] = false;
-			}
-		}
-
-		$this->tabs = $tabs;
-
-	?><div x-data="<?php echo $dataKey ?>" x-id="[tabId]" :class="settings.classes.body"><?php
-	}
-
-	public function end()
-	{?>
-		</div>
-		<script>
-			DoatKolomUi.tab(<?php echo json_encode( $this->identifiers ); ?>,<?php echo json_encode( $this->settings ); ?>,<?php echo json_encode( $this->tabs ) ?>)
-		</script>
-	<?php
+	?><div x-data="<?php echo $this->identifiers['dataKey'] ?>" x-id="[tabId]" :class="settings.classes.body"><?php
 	}
 
 	public function content()
@@ -90,6 +61,15 @@ class Tab
 				</section>
 			</template>
 		</div>
+	<?php
+	}
+
+	public function end()
+	{?>
+		</div>
+		<script>
+			DoatKolomUi.Tab(<?php echo json_encode( $this->identifiers ); ?>,<?php echo json_encode( $this->settings ); ?>,<?php echo json_encode( $this->tabs ) ?>)
+		</script>
 	<?php
 	}
 

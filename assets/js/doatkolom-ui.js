@@ -14,10 +14,20 @@ var DoatKolomUiUtils = {
 		</div>
 	</div>
 </div>`,
+	htmlToDocument(html) {
+		var contentDocument = document.createElement("div");
+		contentDocument.innerHTML = html;
+		var scriptDocuments = contentDocument.querySelectorAll('script');
+		var scripts = scriptDocuments;
+		scriptDocuments.forEach(script => {
+			script.remove();
+		});
+		return { contentDocument, scripts };
+	}
 }
 var DoatKolomUi = {
-	tab: function (identifiers, settings, tabs) {
-		function tabFunction(identifiers, settings, tabs) {
+	Tab: function (identifiers, settings, tabs) {
+		function TabFunction(identifiers, settings, tabs) {
 			Alpine.data(identifiers.dataKey, () => ({
 				tabs: tabs,
 				tabId: identifiers.tabId,
@@ -29,7 +39,7 @@ var DoatKolomUi = {
 				init() {
 					this.$nextTick(() => {
 						setTimeout(function () {
-							this.select(this.$id(identifiers.tabId, 1))
+							this.select(this.$id(identifiers.tabId, settings.selectedId))
 						}.bind(this), 1)
 					})
 				},
@@ -91,7 +101,7 @@ var DoatKolomUi = {
 				},
 				appendContent(content, index, contentArea) {
 					contentArea.innerHTML = '';
-					content = this.htmlToDocument(content);
+					content = DoatKolomUiUtils.htmlToDocument(content);
 					contentArea.appendChild(content.contentDocument);
 
 					content.scripts.forEach(script => {
@@ -102,16 +112,6 @@ var DoatKolomUi = {
 
 					this.contents[index] = { content, is_fetch: true };
 					this.isFetchingContent = false;
-				},
-				htmlToDocument(html) {
-					var contentDocument = document.createElement("div");
-					contentDocument.innerHTML = html;
-					var scriptDocuments = contentDocument.querySelectorAll('script');
-					var scripts = scriptDocuments;
-					scriptDocuments.forEach(script => {
-						script.remove();
-					});
-					return { contentDocument, scripts };
 				}
 			}))
 
@@ -151,10 +151,57 @@ var DoatKolomUi = {
 
 		if (settings.init) {
 			document.addEventListener('alpine:init', () => {
-				tabFunction(identifiers, settings, tabs)
+				TabFunction(identifiers, settings, tabs)
 			});
 		} else {
-			tabFunction(identifiers, settings, tabs)
+			TabFunction(identifiers, settings, tabs)
+		}
+	},
+	Accordion: function(identifiers, settings, items) {
+		function AccordionFunction () {
+			Alpine.data(identifiers.dataKey, () => ({
+				accordions: items,
+				activeItems: {},
+				settings: settings,
+				init() {
+					this.activeItems = settings.activeItems;
+				},
+				isSelected(item_index) {
+					item_index = item_index + 1;
+					if (this.activeItems[item_index] !== undefined && this.activeItems[item_index] === true) {
+						return true;
+					}
+					return false;
+				},
+				getIndexFromId(id) {
+					return id.substr(id.length - 1)
+				},
+				whichChild(el, parent) { return Array.from(parent.children).indexOf(el) },
+			}));
+			Alpine.bind(identifiers.accordionListBind, () => ({
+				['x-ref']: 'accordionList',
+			}))
+			Alpine.bind(identifiers.accordionButtonBind, () => ({
+				[':id']() {
+					return this.$id(identifiers.accordionId, this.whichChild(this.$el.parentElement.parentElement, this.$refs.accordionList))
+				},
+				['@click']() {
+					var index = this.getIndexFromId(this.$el.id);
+					var is_selected = this.isSelected(index - 1);
+					if(!settings.multiple) {
+						this.activeItems = {};
+					}
+					this.activeItems[index] = !is_selected;
+				}
+			}))
+		}
+
+		if (settings.init) {
+			document.addEventListener('alpine:init', () => {
+				AccordionFunction(identifiers, settings, items)
+			});
+		} else {
+			AccordionFunction(identifiers, settings, items)
 		}
 	}
 }
