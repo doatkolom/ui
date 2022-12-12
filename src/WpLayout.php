@@ -16,9 +16,9 @@ class WpLayout extends Layout
 	 */
     public static function instance( Application $application )
     {
-        if ( is_null( static::$instance ) ) {
+        // if ( is_null( static::$instance ) ) {
             static::$instance = new static( $application );
-        }
+        // }
         return static::$instance;
     }
 

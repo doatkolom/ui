@@ -17,9 +17,9 @@ var DoatKolomUiUtils = {
 }
 var DoatKolomUi = {
 	tab: function (Identifiers, settings, tabs) {
-		document.addEventListener('alpine:init', () => {
+		function tabFunction(Identifiers, settings, tabs) {
 			Alpine.data(Identifiers.dataKey, () => ({
-				tabs: {},
+				tabs: tabs,
 				tabId: Identifiers.tabId,
 				settings: settings,
 				selectedId: null,
@@ -28,7 +28,9 @@ var DoatKolomUi = {
 				pulse: '',
 				init() {
 					this.$nextTick(() => {
-						this.select(this.$id(Identifiers.tabId, 1))
+						setTimeout(function () {
+							this.select(this.$id(Identifiers.tabId, 1))
+						}.bind(this), 1)
 					})
 				},
 				select(id) {
@@ -41,12 +43,15 @@ var DoatKolomUi = {
 					return id.substr(id.length - 1)
 				},
 				content(id) {
+
 					if (!this.isfetchingContent) {
+
 						var index = parseInt(this.getIndexFromId(id)) - 1;
 						var tab = this.tabs[index];
 						var contentArea = document.querySelector(`[aria-labelledby="${id}"]`);
-						this.isfetchingContent = true;
+
 						if (this.contents[index] === undefined) {
+							this.isfetchingContent = true;
 							if (tab.content_api) {
 								contentArea.innerHTML = DoatKolomUiUtils.pulse;
 								this.fetchContent(tab, index, contentArea);
@@ -54,6 +59,7 @@ var DoatKolomUi = {
 								this.appendContent(tab.content, index, contentArea);
 							}
 						} else if (tab.content_api && tab.content_cache === false) {
+							this.isfetchingContent = true;
 							contentArea.innerHTML = DoatKolomUiUtils.pulse;
 							this.fetchContent(tab, index, contentArea);
 						}
@@ -65,6 +71,9 @@ var DoatKolomUi = {
 						.then(content => {
 							this.appendContent(content, index, contentArea);
 						});
+				},
+				hasTabs() {
+					return false;
 				},
 				getPositionClasses(elementName, classes) {
 					switch (this.settings.position) {
@@ -138,6 +147,14 @@ var DoatKolomUi = {
 					return this.isSelected(this.$el.id) ? 'border-black bg-white' : 'border-transparent'
 				}
 			}))
-		})
+		}
+
+		if (settings.init) {
+			document.addEventListener('alpine:init', () => {
+				tabFunction(Identifiers, settings, tabs)
+			});
+		} else {
+			tabFunction(Identifiers, settings, tabs)
+		}
 	}
 }
