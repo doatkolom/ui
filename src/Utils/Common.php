@@ -2,9 +2,9 @@
 
 namespace DoatKolom\Ui\Utils;
 
-trait Common
+class Common
 {
-    public function generateRandomString( $length = 10 )
+    public static function generateRandomString( $length = 10 )
     {
         $characters       = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen( $characters );

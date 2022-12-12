@@ -16,20 +16,20 @@ var DoatKolomUiUtils = {
 </div>`,
 }
 var DoatKolomUi = {
-	tab: function (Identifiers, settings, tabs) {
-		function tabFunction(Identifiers, settings, tabs) {
-			Alpine.data(Identifiers.dataKey, () => ({
+	tab: function (identifiers, settings, tabs) {
+		function tabFunction(identifiers, settings, tabs) {
+			Alpine.data(identifiers.dataKey, () => ({
 				tabs: tabs,
-				tabId: Identifiers.tabId,
+				tabId: identifiers.tabId,
 				settings: settings,
 				selectedId: null,
 				contents: {},
-				isfetchingContent: false,
+				isFetchingContent: false,
 				pulse: '',
 				init() {
 					this.$nextTick(() => {
 						setTimeout(function () {
-							this.select(this.$id(Identifiers.tabId, 1))
+							this.select(this.$id(identifiers.tabId, 1))
 						}.bind(this), 1)
 					})
 				},
@@ -44,29 +44,29 @@ var DoatKolomUi = {
 				},
 				content(id) {
 
-					if (!this.isfetchingContent) {
+					if (!this.isFetchingContent) {
 
 						var index = parseInt(this.getIndexFromId(id)) - 1;
 						var tab = this.tabs[index];
 						var contentArea = document.querySelector(`[aria-labelledby="${id}"]`);
 
 						if (this.contents[index] === undefined) {
-							this.isfetchingContent = true;
+							this.isFetchingContent = true;
 							if (tab.content_api) {
 								contentArea.innerHTML = DoatKolomUiUtils.pulse;
 								this.fetchContent(tab, index, contentArea);
 							} else {
 								this.appendContent(tab.content, index, contentArea);
 							}
-						} else if (tab.content_api && tab.content_cache === false) {
-							this.isfetchingContent = true;
+						} else if (tab.content_api && tab.contentCache === false) {
+							this.isFetchingContent = true;
 							contentArea.innerHTML = DoatKolomUiUtils.pulse;
 							this.fetchContent(tab, index, contentArea);
 						}
 					}
 				},
 				fetchContent(tab, index, contentArea) {
-					fetch(tab.content_api, tab.content_api_options)
+					fetch(tab.content_api, tab.contentApiOptions)
 						.then(res => res.text())
 						.then(content => {
 							this.appendContent(content, index, contentArea);
@@ -101,7 +101,7 @@ var DoatKolomUi = {
 					});
 
 					this.contents[index] = { content, is_fetch: true };
-					this.isfetchingContent = false;
+					this.isFetchingContent = false;
 				},
 				htmlToDocument(html) {
 					var contentDocument = document.createElement("div");
@@ -118,7 +118,7 @@ var DoatKolomUi = {
 			/**
 			 * Keyboard focus
 			 */
-			Alpine.bind(Identifiers.tablistBind, () => ({
+			Alpine.bind(identifiers.tablistBind, () => ({
 				['x-ref']: 'tablist',
 				['@keydown.right.prevent.stop']() { this.$focus.wrap().next() },
 				['@keydown.home.prevent.stop']() { this.$focus.first() },
@@ -131,9 +131,9 @@ var DoatKolomUi = {
 			/**
 			 * Tab selector actions
 			 */
-			Alpine.bind(Identifiers.tablistButtonBind, () => ({
+			Alpine.bind(identifiers.tablistButtonBind, () => ({
 				[':id']() {
-					return this.$id(Identifiers.tabId, this.whichChild(this.$el.parentElement, this.$refs.tablist))
+					return this.$id(identifiers.tabId, this.whichChild(this.$el.parentElement, this.$refs.tablist))
 				},
 				['@click']() {
 					this.select(this.$el.id);
@@ -151,10 +151,10 @@ var DoatKolomUi = {
 
 		if (settings.init) {
 			document.addEventListener('alpine:init', () => {
-				tabFunction(Identifiers, settings, tabs)
+				tabFunction(identifiers, settings, tabs)
 			});
 		} else {
-			tabFunction(Identifiers, settings, tabs)
+			tabFunction(identifiers, settings, tabs)
 		}
 	}
 }

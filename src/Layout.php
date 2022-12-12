@@ -10,9 +10,7 @@ abstract class Layout
 {
     protected $data = [];
 
-    use Common;
     use Pulse;
-    use Tab;
 
     abstract public function enqueue_script();
 }
