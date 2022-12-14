@@ -5,7 +5,15 @@ module.exports = {
     './assets/js/doatkolom-ui.js',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'primary': '#4f46e5'
+      },
+      fontFamily: {
+        'primary': ['Poppins', 'Oswald']
+      },
+    },
   },
+ 
   plugins: [],
 }

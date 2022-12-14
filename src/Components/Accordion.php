@@ -13,10 +13,11 @@ class Accordion extends ComponentBase
 	public function setIdentifiers()
 	{
 		$this->identifiers = [
-			'accordionId'         => Common::generateRandomString( 10 ),
-			'dataKey'             => Common::generateRandomString( 10 ),
-			'accordionListBind'   => Common::generateRandomString( 10 ),
-			'accordionButtonBind' => Common::generateRandomString( 10 )
+			'accordionId'             => Common::generateRandomString( 10 ),
+			'dataKey'                 => Common::generateRandomString( 10 ),
+			'accordionListBind'       => Common::generateRandomString( 10 ),
+			'accordionButtonBind'     => Common::generateRandomString( 10 ),
+			'accordionCollapseButton' => Common::generateRandomString( 10 )
 		];
 	}
 	protected function defaultClasses()
@@ -25,6 +26,7 @@ class Accordion extends ComponentBase
 			'body'             => ' ',
 			'inner'            => ' ',
 			'accordion'        => ' ',
+			'accordionHead'    => ' ',
 			'accordionContent' => ' ',
 			'title'            => ' ',
 			'buttonMinus'      => ' ',
@@ -34,37 +36,51 @@ class Accordion extends ComponentBase
 
 	public function start(array $settingArgs, array $items)
 	{
-		$settings = [
+		$defaultSettings = [
 			'init'        => isset( $settingArgs['init'] ) ? $settingArgs['init'] : true,
 			'activeItems' => isset( $settingArgs['activeItems'] ) ? $settingArgs['activeItems'] : [1 => true],
 			'multiple'    => isset( $settingArgs['multiple'] ) ? $settingArgs['multiple'] : false,
 			'classes'     => $this->defaultClasses()
 		];
 
-		$this->settings = $settings;
+		$this->settings = Common::mergeClasses($defaultSettings, $settingArgs);
 		$this->items    = Common::contentBuffer($items);
+
 		?>
-		<div x-data="<?php echo $this->identifiers['dataKey'] ?>" x-id="['<?php echo $this->identifiers['accordionId'] ?>']" class="w-full" :class="settings.classes.body">
+		<div x-data="<?php echo $this->identifiers['dataKey'] ?>" x-id="['<?php echo $this->identifiers['accordionId'] ?>']" class="w-full" :class="accordionSettings.classes.body">
 		<?php
 	}
 
 	public function content()
 	{?>
-		<div x-bind="<?php echo $this->identifiers['accordionListBind'];?>" role="accordionList" class="mx-auto max-w-3xl min-h-[16rem] space-y-4" :class="settings.classes.inner">
+		<div x-bind="<?php echo $this->identifiers['accordionListBind'];?>" role="accordionList" class="grid grid-cols-1 gap-5" :class="accordionSettings.classes.inner">
 			<template x-for="(accordion, index) in accordions" >
-				<div class="rounded-lg bg-white shadow" :id="$id('<?php echo $this->identifiers['accordionId'] ?>', accordion.index)" :class="settings.classes.accordion">
-					<div class="justify-between px-3 py-4">
-						<template x-if="accordion.icon !== undefined">
-							<span class="!inline-block" x-html="accordion.icon"></span>
+				<div x-show="accordion !== undefined" class="rounded-lg bg-white shadow accordionItem" :class="accordionSettings.classes.accordion">
+					<div class="px-3 py-2 h-10" :class="accordionSettings.classes.accordionHead">
+						<template x-if="accordion?.icon !== undefined">
+							<div class="float-left pt-1 w-5" x-html="accordion?.icon"></div>
 						</template>
-						<span x-bind="<?php echo $this->identifiers['accordionButtonBind'];?>" class="items-center justify-between text-xl font-bold cursor-pointer">
-							<span x-text="accordion.title" class="pl-3 capitalize select-none" :class="settings.classes.title"></span>
-							<span x-show="isSelected(index)" aria-hidden="true" class="ml-4 float-right select-none" :class="settings.classes.buttonMinus">&minus;</span>
-							<span x-show="!isSelected(index)" aria-hidden="true" class="ml-4 float-right select-none" :class="settings.classes.buttonPlus">&plus;</span>
-						</span>
+						<div class="float-left" :class="(accordion?.icon !== undefined ? 'w-[calc(100%-20px)]' : 'w-full')">
+							<div class="w-full grid grid-flow-row-dense grid-cols-2">
+								<div>
+									<button x-bind="<?php echo $this->identifiers['accordionButtonBind'];?>" class="items-center text-base font-bold cursor-pointer">
+										<div x-text="accordion?.title" class="pl-3 capitalize select-none" :class="accordionSettings.classes.title"></div>
+									</button>
+								</div>
+								<div>
+									<div class="float-right">
+										<div class="float-left" x-html="accordion?.head"></div>
+										<button x-bind="<?php echo $this->identifiers['accordionCollapseButton'];?>" class="select-none float-right text-lg">
+											<span x-show="isAccordionSelected(index)" :class="accordionSettings.classes.buttonMinus">&minus;</span>
+											<span x-show="!isAccordionSelected(index)" :class="accordionSettings.classes.buttonPlus">&plus;</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div x-show="isSelected(index)" x-collapse>
-						<div class="px-6 pb-4 grid gap-3 grid-cols-1" x-html="accordion.content" :class="settings.classes.accordionContent"></div>
+					<div x-show="isAccordionSelected(index)" x-collapse>
+						<div class="grid gap-3 grid-cols-1" x-html="accordion?.content" :class="accordionSettings.classes.accordionContent"></div>
 					</div>
 				</div>
 			</template>

@@ -18,15 +18,19 @@ class Common
     public static function contentBuffer( array $items )
     {
         foreach ( $items as $key => $tab ) {
-
-            ob_start();
-
-            if ( isset( $items[$key]['content'] ) ) {
+            
+            if ( isset( $items[$key]['content'] ) && is_callable($items[$key]['content']) ) {
+                ob_start();
                 $items[$key]['content']();
+                $items[$key]['content'] = ob_get_clean();
             }
-            $content = ob_get_clean();
 
-            $items[$key]['content'] = $content;
+            if ( isset( $items[$key]['head'] ) && is_callable($items[$key]['head']) ) {
+                ob_start();
+                $items[$key]['head']();
+                $items[$key]['head'] = ob_get_clean();
+            }
+
 
             if ( isset( $items[$key]['contentCache'] ) ) {
                 $items[$key]['contentCache'] = false;
@@ -34,5 +38,18 @@ class Common
         }
 
         return $items;
+    }
+
+    public static function mergeClasses( array $defaultSettings, array $settingArgs ) : array
+    {
+        if ( !empty( $settingArgs['classes'] ) ) {
+            foreach ( $defaultSettings['classes'] as $key => $classes ) {
+                if ( isset( $settingArgs['classes'][$key] ) ) {
+                    $defaultSettings['classes'][$key] .= $settingArgs['classes'][$key];
+                }
+            }
+        }
+
+        return $defaultSettings;
     }
 }

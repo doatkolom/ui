@@ -22,42 +22,36 @@ class Tab extends ComponentBase
 
 	public function start( array $settingArgs, array $tabs )
 	{
-		$settings = [
+		$defaultSettings = [
 			'init'       => isset( $settingArgs['init'] ) ? $settingArgs['init'] : true,
 			'position'   => $settingArgs['position'],
-			'selectedId' => isset( $settingArgs['selectedId'] ) ? $settingArgs['selectedId'] : 1,
+			'tabSelectedId' => isset( $settingArgs['selectedId'] ) ? $settingArgs['selectedId'] : 1,
 			'classes'    => $this->positionClasses( $settingArgs['position'] )
 		];
-
-		if ( !empty( $settingArgs['classes'] ) ) {
-			foreach ( $settings['classes'] as $key => $classes ) {
-				if ( isset( $settingArgs['classes'][$key] ) ) {
-					$settings['classes'][$key] .= $classes;
-				}
-			}
-		}
-
-		$this->settings = $settings;
+		
+		$this->settings = Common::mergeClasses($defaultSettings, $settingArgs);
 		$this->tabs     = Common::contentBuffer($tabs);
 
-	?><div x-data="<?php echo $this->identifiers['dataKey'] ?>" x-id="[tabId]" :class="settings.classes.body"><?php
+	?><div x-data="<?php echo $this->identifiers['dataKey'] ?>" x-id="[tabId]" :class="tabSettings.classes.body"><?php
 	}
 
 	public function content()
 	{?>
-		<ul x-bind="<?php echo $this->identifiers['tablistBind'] ?>" role="tablist" class="items-stretch" :class="settings.classes.tablist">
+		<div class="bg-slate-100" :class="tabSettings.classes.tablist">
+			<ul x-bind="<?php echo $this->identifiers['tablistBind'] ?>" role="tablist" class="items-stretch font-medium text-slate-600 font-primary text-base">
+				<template x-for="tab in tabs">
+					<li x-show="tab !== undefined" class="m-0 relative" :class="tab?.classes?.tab_selector">
+						<button x-text="tab?.title" x-bind="<?php echo $this->identifiers['tablistButtonBind'] ?>" type="button" class="h-full px-5 py-2.5 capitalize" :class="selectTabButtonClass($el.id, tab)" role="tab">
+						</button>
+					</li>
+				</template>
+			</ul>
+		</div>
+		<div role="tabpanels" class="tabpanels min-h-[30rem] rounded-b-md border border-gray-20" :class="tabSettings.classes.tabpanels">
 			<template x-for="tab in tabs">
-				<li x-show="tab !== undefined" class="m-0 relative" :class="tab?.classes?.tab_selector">
-					<button x-text="tab?.title" x-bind="<?php echo $this->identifiers['tablistButtonBind'] ?>" type="button" class="h-full px-5 py-2.5" :class="(isSelected($el.id) ? 'border-gray-200 bg-white ' + getPositionClasses('tab_button', tab?.classes?.tab_button) : 'border-transparent '+ getPositionClasses('tab_button', tab?.classes?.tab_button))" role="tab">
-					</button>
-				</li>
-			</template>
-		</ul>
-		<div role="tabpanels" class="tabpanels min-h-[30rem] rounded-b-md border border-gray-20" :class="settings.classes.tabpanels">
-			<template x-for="tab in tabs">
-				<section :class="tab?.classes?.content_section" x-show="tab !== undefined && isSelected($id(tabId, whichChild($el, $el.parentElement)))"
-				:aria-labelledby="$id(tabId, whichChild($el, $el.parentElement))"
-				role="tabpanel" class="p-8">
+				<section :class="tab?.classes?.content_section" x-show="tab !== undefined && isTabSelected($id(tabId, whichTabChild($el, $el.parentElement)))"
+				:aria-labelledby="$id(tabId, whichTabChild($el, $el.parentElement))"
+				role="tabpanel">
 				</section>
 			</template>
 		</div>
@@ -68,7 +62,7 @@ class Tab extends ComponentBase
 	{?>
 		</div>
 		<script>
-			DoatKolomUi.Tab(<?php echo json_encode( $this->identifiers ); ?>,<?php echo json_encode( $this->settings ); ?>,<?php echo json_encode( $this->tabs ) ?>)
+			DoatKolomUi.Tab(<?php echo json_encode( $this->identifiers ); ?>, <?php echo json_encode( $this->settings ); ?>, <?php echo json_encode( $this->tabs ) ?>);
 		</script>
 	<?php
 	}
@@ -80,13 +74,15 @@ class Tab extends ComponentBase
 				return [
 					'body'      => ' ',
 					'tablist'   => '-mr-px w-1/5 float-left ',
-					'tabpanels' => 'w-[calc(80%-1px)] float-left '
+					'tabpanels' => 'w-[calc(80%-1px)] float-left ',
+					'selectedButton' => ' '
 				];
 			default:
 				return [
 					'body'      => ' ',
 					'tablist'   => '-mb-px flex ',
-					'tabpanels' => ' '
+					'tabpanels' => ' ',
+					'selectedButton' => ' '
 				];
 		}
 	}

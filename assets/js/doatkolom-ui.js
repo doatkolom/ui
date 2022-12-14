@@ -1,5 +1,5 @@
 var DoatKolomUiUtils = {
-	pulse: `<div class="p-4 w-full mx-auto">
+	pulse: `<div class="p-8 w-full mx-auto">
 	<div class="animate-pulse flex space-x-4">
 		<div class="rounded-full bg-slate-200 h-10 w-10"></div>
 		<div class="flex-1 space-y-6 py-1">
@@ -26,67 +26,63 @@ var DoatKolomUiUtils = {
 	}
 }
 var DoatKolomUi = {
-	Tab: function (identifiers, settings, tabs) {
-		function TabFunction(identifiers, settings, tabs) {
-			Alpine.data(identifiers.dataKey, () => ({
+	Tab: function (tabIdentifiers, tabSettings, tabs) {
+		function TabFunction(tabIdentifiers, tabSettings, tabs) {
+			Alpine.data(tabIdentifiers.dataKey, () => ({
 				tabs: tabs,
-				tabId: identifiers.tabId,
-				settings: settings,
-				selectedId: null,
-				contents: {},
-				isFetchingContent: false,
-				pulse: '',
+				tabId: tabIdentifiers.tabId,
+				tabSettings: tabSettings,
+				tabSelectedId: null,
+				tabContents: {},
+				isFetchingTabContent: false,
 				init() {
 					this.$nextTick(() => {
 						setTimeout(function () {
-							this.select(this.$id(identifiers.tabId, settings.selectedId))
+							this.selectTab(this.$id(tabIdentifiers.tabId, tabSettings.tabSelectedId))
 						}.bind(this), 1)
 					})
 				},
-				select(id) {
-					this.content(id);
-					this.selectedId = id
+				selectTab(id) {
+					this.tabContent(id);
+					this.tabSelectedId = id
 				},
-				isSelected(id) { return this.selectedId === id },
-				whichChild(el, parent) { return Array.from(parent.children).indexOf(el) },
+				isTabSelected(id) { return this.tabSelectedId === id },
+				whichTabChild(el, parent) { return Array.from(parent.children).indexOf(el) },
 				getIndexFromId(id) {
 					return id.substr(id.length - 1)
 				},
-				content(id) {
+				tabContent(id) {
 
-					if (!this.isFetchingContent) {
+					if (!this.isFetchingTabContent) {
 
 						var index = parseInt(this.getIndexFromId(id)) - 1;
 						var tab = this.tabs[index];
 						var contentArea = document.querySelector(`[aria-labelledby="${id}"]`);
 
-						if (this.contents[index] === undefined) {
-							this.isFetchingContent = true;
+						if (this.tabContents[index] === undefined) {
+							this.isFetchingTabContent = true;
 							if (tab.content_api) {
 								contentArea.innerHTML = DoatKolomUiUtils.pulse;
-								this.fetchContent(tab, index, contentArea);
+								this.fetchTabContent(tab, index, contentArea);
 							} else {
-								this.appendContent(tab.content, index, contentArea);
+								this.appendTabContent(tab.content, index, contentArea);
 							}
 						} else if (tab.content_api && tab.contentCache === false) {
-							this.isFetchingContent = true;
+							this.isFetchingTabContent = true;
 							contentArea.innerHTML = DoatKolomUiUtils.pulse;
-							this.fetchContent(tab, index, contentArea);
+							this.fetchTabContent(tab, index, contentArea);
 						}
 					}
 				},
-				fetchContent(tab, index, contentArea) {
+				fetchTabContent(tab, index, contentArea) {
 					fetch(tab.content_api, tab.contentApiOptions)
 						.then(res => res.text())
 						.then(content => {
-							this.appendContent(content, index, contentArea);
+							this.appendTabContent(content, index, contentArea);
 						});
 				},
-				hasTabs() {
-					return false;
-				},
-				getPositionClasses(elementName, classes) {
-					switch (this.settings.position) {
+				getTabPositionClasses(elementName, classes) {
+					switch (this.tabSettings.position) {
 						case 'top':
 							if ('tab_button' == elementName) {
 								return ' border-t border-l border-r rounded-t-md inline-flex ' + classes;
@@ -99,7 +95,7 @@ var DoatKolomUi = {
 							return classes;
 					}
 				},
-				appendContent(content, index, contentArea) {
+				appendTabContent(content, index, contentArea) {
 					contentArea.innerHTML = '';
 					content = DoatKolomUiUtils.htmlToDocument(content);
 					contentArea.appendChild(content.contentDocument);
@@ -110,15 +106,21 @@ var DoatKolomUi = {
 						contentArea.appendChild(scriptDocument);
 					});
 
-					this.contents[index] = { content, is_fetch: true };
-					this.isFetchingContent = false;
+					this.tabContents[index] = { content, is_fetch: true };
+					this.isFetchingTabContent = false;
+				},
+				selectTabButtonClass(id, tab) {
+					if (this.isTabSelected(id)) {
+						return 'border-gray-200 bg-white ' + this.getTabPositionClasses('tab_button', tab?.classes?.tab_button) + ' ' + this.tabSettings.classes.selectedButton;
+					}
+					return 'border-transparent ' + this.getTabPositionClasses('tab_button', tab?.classes?.tab_button);
 				}
 			}))
 
 			/**
 			 * Keyboard focus
 			 */
-			Alpine.bind(identifiers.tablistBind, () => ({
+			Alpine.bind(tabIdentifiers.tablistBind, () => ({
 				['x-ref']: 'tablist',
 				['@keydown.right.prevent.stop']() { this.$focus.wrap().next() },
 				['@keydown.home.prevent.stop']() { this.$focus.first() },
@@ -131,44 +133,41 @@ var DoatKolomUi = {
 			/**
 			 * Tab selector actions
 			 */
-			Alpine.bind(identifiers.tablistButtonBind, () => ({
+			Alpine.bind(tabIdentifiers.tablistButtonBind, () => ({
 				[':id']() {
-					return this.$id(identifiers.tabId, this.whichChild(this.$el.parentElement, this.$refs.tablist))
+					return this.$id(tabIdentifiers.tabId, this.whichTabChild(this.$el.parentElement, this.$refs.tablist))
 				},
 				['@click']() {
-					this.select(this.$el.id);
+					this.selectTab(this.$el.id);
 				},
 				['@focus']() {
-					this.select(this.$el.id)
+					this.selectTab(this.$el.id)
 				},
-				[':tabindex']() { return this.isSelected(this.$el.id) ? 0 : -1 },
-				[':aria-selected']() { return this.isSelected(this.$el.id) },
-				[':class']() {
-					return this.isSelected(this.$el.id) ? 'border-black bg-white' : 'border-transparent'
-				}
+				[':tabindex']() { return this.isTabSelected(this.$el.id) ? 0 : -1 },
+				[':aria-selected']() { return this.isTabSelected(this.$el.id) },
 			}))
 		}
 
-		if (settings.init) {
+		if (tabSettings.init) {
 			document.addEventListener('alpine:init', () => {
-				TabFunction(identifiers, settings, tabs)
+				TabFunction(tabIdentifiers, tabSettings, tabs)
 			});
 		} else {
-			TabFunction(identifiers, settings, tabs)
+			TabFunction(tabIdentifiers, tabSettings, tabs)
 		}
 	},
-	Accordion: function(identifiers, settings, items) {
-		function AccordionFunction () {
+	Accordion: function (identifiers, accordionSettings, items) {
+		function AccordionFunction() {
 			Alpine.data(identifiers.dataKey, () => ({
 				accordions: items,
-				activeItems: {},
-				settings: settings,
+				activeAccordions: {},
+				accordionSettings: accordionSettings,
 				init() {
-					this.activeItems = settings.activeItems;
+					this.activeAccordions = accordionSettings.activeItems;
 				},
-				isSelected(item_index) {
+				isAccordionSelected(item_index) {
 					item_index = item_index + 1;
-					if (this.activeItems[item_index] !== undefined && this.activeItems[item_index] === true) {
+					if (this.activeAccordions[item_index] !== undefined && this.activeAccordions[item_index] === true) {
 						return true;
 					}
 					return false;
@@ -176,32 +175,44 @@ var DoatKolomUi = {
 				getIndexFromId(id) {
 					return id.substr(id.length - 1)
 				},
-				whichChild(el, parent) { return Array.from(parent.children).indexOf(el) },
+				selectClickEvent() {
+					var index = this.getIndexFromId(this.$el.id);
+					var is_selected = this.isAccordionSelected(index - 1);
+					if (!accordionSettings.multiple) {
+						this.activeAccordions = {};
+					}
+					this.activeAccordions[index] = !is_selected;
+				},
+				accordionWhichChild(el, parent) { return Array.from(parent.children).indexOf(el) },
 			}));
 			Alpine.bind(identifiers.accordionListBind, () => ({
 				['x-ref']: 'accordionList',
 			}))
 			Alpine.bind(identifiers.accordionButtonBind, () => ({
 				[':id']() {
-					return this.$id(identifiers.accordionId, this.whichChild(this.$el.parentElement.parentElement, this.$refs.accordionList))
+					return this.$id(identifiers.accordionId, this.accordionWhichChild(this.$el.closest('.accordionItem'), this.$refs.accordionList))
 				},
 				['@click']() {
-					var index = this.getIndexFromId(this.$el.id);
-					var is_selected = this.isSelected(index - 1);
-					if(!settings.multiple) {
-						this.activeItems = {};
-					}
-					this.activeItems[index] = !is_selected;
+					this.selectClickEvent();
+				}
+			}))
+
+			Alpine.bind(identifiers.accordionCollapseButton, () => ({
+				[':id']() {
+					return this.$id(identifiers.accordionId, this.accordionWhichChild(this.$el.closest('.accordionItem'), this.$refs.accordionList))
+				},
+				['@click']() {
+					this.selectClickEvent();
 				}
 			}))
 		}
 
-		if (settings.init) {
+		if (accordionSettings.init) {
 			document.addEventListener('alpine:init', () => {
-				AccordionFunction(identifiers, settings, items)
+				AccordionFunction(identifiers, accordionSettings, items)
 			});
 		} else {
-			AccordionFunction(identifiers, settings, items)
+			AccordionFunction(identifiers, accordionSettings, items)
 		}
 	}
 }
