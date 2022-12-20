@@ -69,7 +69,7 @@ class Accordion extends ComponentBase
 								</div>
 								<div>
 									<div class="float-right">
-										<div class="float-left" x-html="accordion?.head"></div>
+										<div class="float-left" x-show="accordion?.head !== undefined" x-html="accordion?.head"></div>
 										<button x-bind="<?php echo $this->identifiers['accordionCollapseButton'];?>" class="select-none float-right text-lg">
 											<span x-show="isAccordionSelected(index)" :class="accordionSettings.classes.buttonMinus">&minus;</span>
 											<span x-show="!isAccordionSelected(index)" :class="accordionSettings.classes.buttonPlus">&plus;</span>
@@ -80,7 +80,7 @@ class Accordion extends ComponentBase
 						</div>
 					</div>
 					<div x-show="isAccordionSelected(index)" x-collapse>
-						<div class="grid gap-3 grid-cols-1" x-html="accordion?.content" :class="accordionSettings.classes.accordionContent"></div>
+						<div x-html="accordion?.content" :class="accordionSettings.classes.accordionContent"></div>
 					</div>
 				</div>
 			</template>

@@ -10,7 +10,7 @@ class Modal extends ComponentBase
 	public function button(string $buttonText)
 	{
 		?>
-		<span x-on:click="$store.datokolomUiModal.changeModalStatus()">
+		<span x-on:click="$store.DoatKolomUiModal.changeModalStatus()">
 			<button type="button" class="rounded-md bg-white px-5 py-2.5 shadow">
 				<?php echo $buttonText?>
 			</button>
@@ -26,13 +26,13 @@ class Modal extends ComponentBase
     public function content()
     {
 		?>
-		<div x-show="$store.datokolomUiModal.modalStatus" style="display: none" class="fixed inset-0 overflow-y-auto">
-			<div x-show="$store.datokolomUiModal.modalStatus" x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50"></div>
+		<div x-show="$store.DoatKolomUiModal.modalStatus" style="display: none" class="fixed inset-0 overflow-y-auto">
+			<div x-show="$store.DoatKolomUiModal.modalStatus" x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50"></div>
 
-			<div x-show="$store.datokolomUiModal.modalStatus" x-transition x-on:click="$store.datokolomUiModal.changeModalStatus()"
+			<div x-show="$store.DoatKolomUiModal.modalStatus" x-transition x-on:click="$store.DoatKolomUiModal.changeModalStatus()"
 				class="relative flex min-h-screen items-center justify-center p-4">
 
-				<div x-on:click.stop x-trap.noscroll.inert="$store.datokolomUiModal.modalStatus"
+				<div x-on:click.stop x-trap.noscroll.inert="$store.DoatKolomUiModal.modalStatus"
 					class="doatkolom-ui-modal-content relative w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-4 shadow-lg">
 				</div>
 			</div>
@@ -46,7 +46,7 @@ class Modal extends ComponentBase
 		</div>
 		<script>
 			document.addEventListener('alpine:init', () => {
-				Alpine.store('datokolomUiModal', {
+				Alpine.store('DoatKolomUiModal', {
 					modalStatus: false,
 					contents: {},
 					changeModalStatus() {

@@ -442,8 +442,8 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .doatkolom-ui .-mb-px{
   margin-bottom: -1px;
 }
-.doatkolom-ui .inline{
-  display: inline;
+.doatkolom-ui .ml-4{
+  margin-left: 1rem;
 }
 .doatkolom-ui .flex{
   display: flex;
@@ -457,6 +457,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .doatkolom-ui .contents{
   display: contents;
 }
+.doatkolom-ui .hidden{
+  display: none;
+}
 .doatkolom-ui .h-10{
   height: 2.5rem;
 }
@@ -468,6 +471,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .doatkolom-ui .h-full{
   height: 100%;
+}
+.doatkolom-ui .h-6{
+  height: 1.5rem;
 }
 .doatkolom-ui .min-h-screen{
   min-height: 100vh;
@@ -484,11 +490,11 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .doatkolom-ui .w-\[calc\(100\%\+1px\)\]{
   width: calc(100% + 1px);
 }
-.doatkolom-ui .w-1\/12{
-  width: 8.333333%;
+.doatkolom-ui .w-5{
+  width: 1.25rem;
 }
-.doatkolom-ui .w-11\/12{
-  width: 91.666667%;
+.doatkolom-ui .w-\[calc\(100\%-20px\)\]{
+  width: calc(100% - 20px);
 }
 .doatkolom-ui .w-1\/5{
   width: 20%;
@@ -496,20 +502,25 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .doatkolom-ui .w-\[calc\(80\%-1px\)\]{
   width: calc(80% - 1px);
 }
-.doatkolom-ui .w-5{
-  width: 1.25rem;
+.doatkolom-ui .w-14{
+  width: 3.5rem;
 }
-.doatkolom-ui .w-\[calc\(100\%-20\)\]{
-  width: calc(100% - 20);
-}
-.doatkolom-ui .w-\[calc\(100\%-20px\)\]{
-  width: calc(100% - 20px);
+.doatkolom-ui .w-6{
+  width: 1.5rem;
 }
 .doatkolom-ui .max-w-2xl{
   max-width: 42rem;
 }
 .doatkolom-ui .flex-1{
   flex: 1 1 0%;
+}
+.doatkolom-ui .translate-x-7{
+  --tw-translate-x: 1.75rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.doatkolom-ui .translate-x-1{
+  --tw-translate-x: 0.25rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 @keyframes pulse{
   50%{
@@ -521,6 +532,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .doatkolom-ui .cursor-pointer{
   cursor: pointer;
+}
+.doatkolom-ui .cursor-move{
+  cursor: move;
 }
 .doatkolom-ui .select-none{
   -webkit-user-select: none;
@@ -553,9 +567,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .doatkolom-ui .gap-5{
   gap: 1.25rem;
-}
-.doatkolom-ui .gap-3{
-  gap: 0.75rem;
 }
 .doatkolom-ui .space-x-4 > :not([hidden]) ~ :not([hidden]){
   --tw-space-x-reverse: 0;
@@ -636,6 +647,14 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-bg-opacity: 1;
   background-color: rgb(241 245 249 / var(--tw-bg-opacity));
 }
+.doatkolom-ui .bg-slate-400{
+  --tw-bg-opacity: 1;
+  background-color: rgb(148 163 184 / var(--tw-bg-opacity));
+}
+.doatkolom-ui .bg-slate-300{
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity));
+}
 .doatkolom-ui .bg-opacity-50{
   --tw-bg-opacity: 0.5;
 }
@@ -681,10 +700,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   font-size: 1rem;
   line-height: 1.5rem;
 }
-.doatkolom-ui .text-xl{
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-}
 .doatkolom-ui .text-lg{
   font-size: 1.125rem;
   line-height: 1.75rem;
@@ -702,6 +717,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-text-opacity: 1;
   color: rgb(71 85 105 / var(--tw-text-opacity));
 }
+.doatkolom-ui .text-gray-900{
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity));
+}
 .doatkolom-ui .shadow{
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
@@ -711,4 +730,16 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.doatkolom-ui .shadow-md{
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.doatkolom-ui .transition{
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }

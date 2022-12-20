@@ -23,7 +23,8 @@ var DoatKolomUiUtils = {
 			script.remove();
 		});
 		return { contentDocument, scripts };
-	}
+	},
+	getChildNo(child, parent) { return Array.from(parent.children).indexOf(child) },
 }
 var DoatKolomUi = {
 	Tab: function (tabIdentifiers, tabSettings, tabs) {
