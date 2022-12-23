@@ -10,7 +10,7 @@ class Modal extends ComponentBase
 	public function button(string $buttonText)
 	{
 		?>
-		<span x-on:click="$store.DoatKolomUiModal.changeModalStatus()">
+		<span x-on:click="$store.DoatKolomUiModal.changeStatus()">
 			<button type="button" class="rounded-md bg-white px-5 py-2.5 shadow">
 				<?php echo $buttonText?>
 			</button>
@@ -20,19 +20,20 @@ class Modal extends ComponentBase
 
     public function start( array $settingArgs, array $tabs )
     {
-		?><div x-data><?php
+		?><div x-data class="doatkolom-ui"><?php
 	}
 
     public function content()
     {
 		?>
-		<div x-show="$store.DoatKolomUiModal.modalStatus" style="display: none" class="fixed inset-0 overflow-y-auto">
-			<div x-show="$store.DoatKolomUiModal.modalStatus" x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50"></div>
+		<div x-show="$store.DoatKolomUiModal.status" style="display: none" class="fixed inset-0 overflow-y-auto">
+			<div x-show="$store.DoatKolomUiModal.status" x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50"></div>
 
-			<div x-show="$store.DoatKolomUiModal.modalStatus" x-transition x-on:click="$store.DoatKolomUiModal.changeModalStatus()"
+			<div x-show="$store.DoatKolomUiModal.status" x-transition
 				class="relative flex min-h-screen items-center justify-center p-4">
-
-				<div x-on:click.stop x-trap.noscroll.inert="$store.DoatKolomUiModal.modalStatus"
+				<div
+					x-on:click.outside="$store.DoatKolomUiModal.changeStatus()"
+				 	x-trap.noscroll.inert="$store.DoatKolomUiModal.status"
 					class="doatkolom-ui-modal-content relative w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-4 shadow-lg">
 				</div>
 			</div>
@@ -46,47 +47,14 @@ class Modal extends ComponentBase
 		</div>
 		<script>
 			document.addEventListener('alpine:init', () => {
-				Alpine.store('DoatKolomUiModal', {
-					modalStatus: false,
-					contents: {},
-					changeModalStatus() {
-						this.modalStatus = !this.modalStatus;
-					},
-					setContent(content) {
-						this.content = content;
-					},
-					setContentByApi(api, apiOptions, cacheKey = false) {
-						if( cacheKey && this.contents[cacheKey] !== undefined ) {
-							this.setContent(this.contents[cacheKey]);
-						} else {
-							this.getContentArea().innerHTML = DoatKolomUiUtils.pulse;
-							fetch(api, apiOptions).then(res => res.text()).then(content => this.prepareContent(content, cacheKey));
-						}
-					},
-					prepareContent(content, cacheKey) {
-						if(cacheKey) {
-							this.contents[cacheKey] = content;
-						}
-						this.setContent(content)
-					},
-					pushModalData(key, value) {
-						this[key] = value;
-					},
-					setContent(content) {
-						this.content          = content;
-						var contentArea       = this.getContentArea();
-						contentArea.innerHTML = '';
-						content               = DoatKolomUiUtils.htmlToDocument(content);
-						contentArea.appendChild(content.contentDocument);
-						content.scripts.forEach(script => {
-							var scriptDocument = document.createElement("script");
-							scriptDocument.innerHTML = script.innerHTML;
-							contentArea.appendChild(scriptDocument);
-						});
-					},
+				let modalData = {
 					getContentArea() {
 						return document.querySelector('.doatkolom-ui-modal-content');
 					}
+				};
+				Alpine.store('DoatKolomUiModal', {
+					...DoatKolomUiUtils.modalAndDrawerData,
+					...modalData
 				})
 			});
 		</script>

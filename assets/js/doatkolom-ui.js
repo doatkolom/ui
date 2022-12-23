@@ -25,6 +25,45 @@ var DoatKolomUiUtils = {
 		return { contentDocument, scripts };
 	},
 	getChildNo(child, parent) { return Array.from(parent.children).indexOf(child) },
+	modalAndDrawerData: {
+		status: false,
+		contents: {},
+		changeStatus() {
+			this.status = !this.status;
+		},
+		setContent(content) {
+			this.content = content;
+		},
+		setContentByApi(api, apiOptions, cacheKey = false) {
+			if (cacheKey && this.contents[cacheKey] !== undefined) {
+				this.setContent(this.contents[cacheKey]);
+			} else {
+				this.getContentArea().innerHTML = DoatKolomUiUtils.pulse;
+				fetch(api, apiOptions).then(res => res.text()).then(content => this.prepareContent(content, cacheKey));
+			}
+		},
+		prepareContent(content, cacheKey) {
+			if (cacheKey) {
+				this.contents[cacheKey] = content;
+			}
+			this.setContent(content)
+		},
+		pushData(key, value) {
+			this[key] = value;
+		},
+		setContent(content) {
+			this.content = content;
+			var contentArea = this.getContentArea();
+			contentArea.innerHTML = '';
+			content = DoatKolomUiUtils.htmlToDocument(content);
+			contentArea.appendChild(content.contentDocument);
+			content.scripts.forEach(script => {
+				var scriptDocument = document.createElement("script");
+				scriptDocument.innerHTML = script.innerHTML;
+				contentArea.appendChild(scriptDocument);
+			});
+		}
+	}
 }
 var DoatKolomUi = {
 	Tab: function (tabIdentifiers, tabSettings, tabs) {
