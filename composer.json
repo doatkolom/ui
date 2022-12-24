@@ -1,5 +1,7 @@
 {
     "name": "doatkolom/ui",
+    "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "DoatKolom\\Ui\\": "src/"
