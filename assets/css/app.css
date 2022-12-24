@@ -776,6 +776,12 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
+.doatkolom-ui .opacity-0{
+  opacity: 0;
+}
+.doatkolom-ui .opacity-100{
+  opacity: 1;
+}
 .doatkolom-ui .shadow{
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
@@ -798,8 +804,8 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
-.doatkolom-ui .duration-500{
-  transition-duration: 500ms;
+.doatkolom-ui .duration-300{
+  transition-duration: 300ms;
 }
 .doatkolom-ui .ease-out{
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
