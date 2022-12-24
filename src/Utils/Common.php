@@ -31,7 +31,7 @@ class Common
                 $items[$key]['head'] = ob_get_clean();
             }
 
-            if ( isset( $items[$key]['contentCache'] ) ) {
+            if ( empty( $items[$key]['contentCache'] ) ) {
                 $items[$key]['contentCache'] = false;
             }
         }

@@ -402,6 +402,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
 }
+.doatkolom-ui .pointer-events-auto{
+  pointer-events: auto;
+}
 .doatkolom-ui .static{
   position: static;
 }
@@ -416,6 +419,18 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   right: 0px;
   bottom: 0px;
   left: 0px;
+}
+.doatkolom-ui .top-0{
+  top: 0px;
+}
+.doatkolom-ui .left-0{
+  left: 0px;
+}
+.doatkolom-ui .right-0{
+  right: 0px;
+}
+.doatkolom-ui .z-\[9999\]{
+  z-index: 9999;
 }
 .doatkolom-ui .col-span-2{
   grid-column: span 2 / span 2;
@@ -435,6 +450,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .doatkolom-ui .mx-auto{
   margin-left: auto;
   margin-right: auto;
+}
+.doatkolom-ui .mt-8{
+  margin-top: 2rem;
 }
 .doatkolom-ui .-mr-px{
   margin-right: -1px;
@@ -468,6 +486,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .doatkolom-ui .h-14{
   height: 3.5rem;
+}
+.doatkolom-ui .h-screen{
+  height: 100vh;
 }
 .doatkolom-ui .h-full{
   height: 100%;
@@ -513,6 +534,14 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .doatkolom-ui .flex-1{
   flex: 1 1 0%;
+}
+.doatkolom-ui .translate-x-full{
+  --tw-translate-x: 100%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.doatkolom-ui .translate-x-0{
+  --tw-translate-x: 0px;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .doatkolom-ui .translate-x-7{
   --tw-translate-x: 1.75rem;
@@ -583,6 +612,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
 }
+.doatkolom-ui .overflow-scroll{
+  overflow: scroll;
+}
 .doatkolom-ui .overflow-y-auto{
   overflow-y: auto;
 }
@@ -643,6 +675,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
+.doatkolom-ui .bg-slate-500{
+  --tw-bg-opacity: 1;
+  background-color: rgb(100 116 139 / var(--tw-bg-opacity));
+}
 .doatkolom-ui .bg-slate-100{
   --tw-bg-opacity: 1;
   background-color: rgb(241 245 249 / var(--tw-bg-opacity));
@@ -676,6 +712,14 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
+.doatkolom-ui .py-3{
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.doatkolom-ui .px-4{
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
 .doatkolom-ui .px-5{
   padding-left: 1.25rem;
   padding-right: 1.25rem;
@@ -704,14 +748,25 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   font-size: 1.125rem;
   line-height: 1.75rem;
 }
+.doatkolom-ui .text-sm{
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
 .doatkolom-ui .font-bold{
   font-weight: 700;
+}
+.doatkolom-ui .font-semibold{
+  font-weight: 600;
 }
 .doatkolom-ui .font-medium{
   font-weight: 500;
 }
 .doatkolom-ui .capitalize{
   text-transform: capitalize;
+}
+.doatkolom-ui .text-white{
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 .doatkolom-ui .text-slate-600{
   --tw-text-opacity: 1;
@@ -742,4 +797,16 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+.doatkolom-ui .duration-500{
+  transition-duration: 500ms;
+}
+.doatkolom-ui .ease-out{
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+.doatkolom-ui .ease-in{
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+.doatkolom-ui [x-cloak] {
+  display: none !important;
 }
