@@ -37,10 +37,10 @@ class Tab extends ComponentBase
 
 	public function content()
 	{?>
-		<div class="bg-slate-100" :class="tabSettings.classes.tablist">
-			<ul x-bind="<?php echo $this->identifiers['tablistBind'] ?>" role="tablist" class="items-stretch font-medium text-slate-600 font-primary text-base">
+		<div class="bg-slate-100" :class="tabSettings.classes.tablistBody">
+			<ul x-bind="<?php echo $this->identifiers['tablistBind'] ?>" role="tablist" class="items-stretch font-medium text-slate-600 font-primary text-base" :class="tabSettings?.classes?.tablist">
 				<template x-for="tab in tabs">
-					<li x-show="tab !== undefined" class="m-0 relative" :class="tab?.classes?.tab_selector">
+					<li x-show="tab !== undefined" x-cloak class="m-0 relative" :class="tab?.classes?.tab_selector">
 						<button x-text="tab?.title" x-bind="<?php echo $this->identifiers['tablistButtonBind'] ?>" type="button" class="h-full px-5 py-2.5 capitalize" :class="selectTabButtonClass($el.id, tab)" role="tab">
 						</button>
 					</li>
@@ -49,7 +49,7 @@ class Tab extends ComponentBase
 		</div>
 		<div role="tabpanels" class="tabpanels min-h-[30rem] rounded-b-md border border-gray-20" :class="tabSettings.classes.tabpanels">
 			<template x-for="tab in tabs">
-				<section :class="tab?.classes?.content_section" x-show="tab !== undefined && isTabSelected($id(tabId, whichTabChild($el, $el.parentElement)))"
+				<section :class="tab?.classes?.content_section" x-cloak x-show="tab !== undefined && isTabSelected($id(tabId, whichTabChild($el, $el.parentElement)))"
 				:aria-labelledby="$id(tabId, whichTabChild($el, $el.parentElement))"
 				role="tabpanel">
 				</section>
@@ -73,14 +73,16 @@ class Tab extends ComponentBase
 			case 'left':
 				return [
 					'body'      => ' ',
-					'tablist'   => '-mr-px w-1/5 float-left ',
+					'tablistBody'   => '-mr-px w-1/5 float-left ',
+					'tablist'   => ' ',
 					'tabpanels' => 'w-[calc(80%-1px)] float-left ',
 					'selectedButton' => ' '
 				];
 			default:
 				return [
 					'body'      => ' ',
-					'tablist'   => '-mb-px flex ',
+					'tablistBody'   => '-mb-px flex ',
+					'tablist'   => ' flex',
 					'tabpanels' => ' ',
 					'selectedButton' => ' '
 				];
