@@ -28,8 +28,18 @@ var DoatKolomUiUtils = {
 	modalAndDrawerData: {
 		status: false,
 		contents: {},
-		changeStatus() {
-			this.status = !this.status;
+		isUnLock: true,
+		lock() {
+			this.isUnLock = false;
+		},
+		unLock() {
+			this.isUnLock = true
+		},
+		changeStatus(unLock = false) {
+			if(unLock || this.isUnLock) {
+				this.isUnLock = true;
+				this.status = !this.status;
+			}
 		},
 		setContent(content) {
 			this.content = content;
