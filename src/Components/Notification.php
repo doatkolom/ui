@@ -40,11 +40,11 @@ class Notification extends ComponentBase
 			<div x-data="<?php echo $this->identifiers['notificationKey']?>" 
 				x-show="show" 
 				x-transition:enter="transition ease-out duration-300" 
-				x-transition:enter-start="translate-x-full" 
-				x-transition:enter-end="translate-x-0" 
+				x-transition:enter-start="translate-x-full opacity-0" 
+				x-transition:enter-end="translate-x-0 opacity-100" 
 				x-transition:leave="transition ease-in duration-300" 
-				x-transition:leave-start="translate-x-0" 
-				x-transition:leave-end="translate-x-full" 
+				x-transition:leave-start="translate-x-0 opacity-100" 
+				x-transition:leave-end="translate-x-full opacity-0" 
 				class="pointer-events-auto relative w-full max-w-sm rounded-md border border-gray-200 bg-white py-4 pl-6 pr-4 shadow-lg">
 				<div class="flex items-start">
 					<div x-show="notification.type === 'info'" class="flex-shrink-0">
