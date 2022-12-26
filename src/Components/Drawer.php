@@ -41,7 +41,7 @@ class Drawer extends ComponentBase
 					x-transition:leave-start="translate-x-0" 
 					x-transition:leave-end="translate-x-full" 
 					x-on:click.outside="$store.DoatKolomUiDrawer.changeStatus()" 
-					class="fixed top-0 right-0 h-screen bg-white overflow-scroll" 
+					class="fixed top-0 right-0 h-screen bg-white" 
 					:style="$store.DoatKolomUiDrawer.getWidth()"
 				>
 					<div class="doatkolom-ui-drawer-content">
