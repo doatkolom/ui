@@ -18,7 +18,7 @@ class Modal extends ComponentBase
 		<?php
 	}
 
-    public function start( array $settingArgs, array $tabs )
+    public function start( array $settingArgs = [], array $tabs )
     {
 		?><div x-data class="doatkolom-ui"><?php
 	}

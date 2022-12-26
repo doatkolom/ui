@@ -12,7 +12,7 @@ abstract class ComponentBase
     public function setIdentifiers()
     {}
 
-    public function render( array $settingArgs, array $items = [] )
+    public function render( array $settingArgs = [], array $items = [] )
     {
         $this->start( $settingArgs, $items );
         $this->content();

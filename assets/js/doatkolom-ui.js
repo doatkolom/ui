@@ -254,5 +254,41 @@ var DoatKolomUi = {
 		} else {
 			AccordionFunction(identifiers, accordionSettings, items)
 		}
+	},
+	Notification: function (identifiers, notificationSettings) {
+		function NotificationFunction(identifiers) {
+			Alpine.data(identifiers.dataKey, () => ({
+				notifications: [],
+				add(e) {
+					this.notifications.push({
+						id: e.timeStamp,
+						type: e.detail.type,
+						content: e.detail.content
+					})
+				},
+				remove(notification) {
+					this.notifications = this.notifications.filter(i => i.id !== notification.id)
+				}
+			}))
+			Alpine.data(identifiers.notificationKey, () => ({
+				show: false,
+				init() {
+					this.$nextTick(() => this.show = true)
+					setTimeout(() => this.transitionOut(), 2500)
+				},
+				transitionOut() {
+					this.show = false;
+					setTimeout(() => this.remove(this.notification), 300)
+				},
+			}))
+		}
+
+		if (notificationSettings.init) {
+			document.addEventListener('alpine:init', () => {
+				NotificationFunction(identifiers)
+			});
+		} else {
+			NotificationFunction(identifiers)
+		}
 	}
 }
