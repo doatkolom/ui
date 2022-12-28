@@ -17,3 +17,5 @@ mix.sass('resources/sass/app.scss', 'assets/css', {}, [{
 		return root;
 	}
 }]).tailwind();
+
+mix.js('resources/js/doatkolom-ui.js', 'assets/js');

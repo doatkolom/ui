@@ -1,304 +1,503 @@
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./resources/js/doatkolom-ui.js":
+/*!**************************************!*\
+  !*** ./resources/js/doatkolom-ui.js ***!
+  \**************************************/
+/***/ (() => {
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var DoatKolomUiUtils = {
-	pulse: `<div class="p-8 w-full mx-auto">
-	<div class="animate-pulse flex space-x-4">
-		<div class="rounded-full bg-slate-200 h-10 w-10"></div>
-		<div class="flex-1 space-y-6 py-1">
-			<div class="h-2 bg-slate-200 rounded"></div>
-			<div class="space-y-3">
-				<div class="grid grid-cols-3 gap-4">
-					<div class="h-2 bg-slate-200 rounded col-span-2"></div>
-					<div class="h-2 bg-slate-200 rounded col-span-1"></div>
-				</div>
-				<div class="h-2 bg-slate-200 rounded"></div>
-			</div>
-		</div>
-	</div>
-</div>`,
-	htmlToDocument(html) {
-		var contentDocument = document.createElement("div");
-		contentDocument.innerHTML = html;
-		var scriptDocuments = contentDocument.querySelectorAll('script');
-		var scripts = scriptDocuments;
-		scriptDocuments.forEach(script => {
-			script.remove();
-		});
-		return { contentDocument, scripts };
-	},
-	getChildNo(child, parent) { return Array.from(parent.children).indexOf(child) },
-	modalAndDrawerData: {
-		status: false,
-		contents: {},
-		isUnLock: true,
-		lock() {
-			this.isUnLock = false;
-		},
-		unLock() {
-			this.isUnLock = true
-		},
-		changeStatus(unLock = false) {
-			if(unLock || this.isUnLock) {
-				this.isUnLock = true;
-				this.status = !this.status;
-			}
-		},
-		setContent(content) {
-			this.content = content;
-		},
-		setContentByApi(api, apiOptions, cacheKey = false) {
-			if (cacheKey && this.contents[cacheKey] !== undefined) {
-				this.setContent(this.contents[cacheKey]);
-			} else {
-				this.getContentArea().innerHTML = DoatKolomUiUtils.pulse;
-				fetch(api, apiOptions).then(res => res.text()).then(content => this.prepareContent(content, cacheKey));
-			}
-		},
-		prepareContent(content, cacheKey) {
-			if (cacheKey) {
-				this.contents[cacheKey] = content;
-			}
-			this.setContent(content)
-		},
-		pushData(key, value) {
-			this[key] = value;
-		},
-		setContent(content) {
-			this.content = content;
-			var contentArea = this.getContentArea();
-			contentArea.innerHTML = '';
-			content = DoatKolomUiUtils.htmlToDocument(content);
-			contentArea.appendChild(content.contentDocument);
-			content.scripts.forEach(script => {
-				var scriptDocument = document.createElement("script");
-				scriptDocument.innerHTML = script.innerHTML;
-				contentArea.appendChild(scriptDocument);
-			});
-		}
-	}
-}
+  pulse: "<div class=\"p-8 w-full mx-auto\">\n\t<div class=\"animate-pulse flex space-x-4\">\n\t\t<div class=\"rounded-full bg-slate-200 h-10 w-10\"></div>\n\t\t<div class=\"flex-1 space-y-6 py-1\">\n\t\t\t<div class=\"h-2 bg-slate-200 rounded\"></div>\n\t\t\t<div class=\"space-y-3\">\n\t\t\t\t<div class=\"grid grid-cols-3 gap-4\">\n\t\t\t\t\t<div class=\"h-2 bg-slate-200 rounded col-span-2\"></div>\n\t\t\t\t\t<div class=\"h-2 bg-slate-200 rounded col-span-1\"></div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"h-2 bg-slate-200 rounded\"></div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>",
+  htmlToDocument: function htmlToDocument(html) {
+    var contentDocument = document.createElement("div");
+    contentDocument.innerHTML = html;
+    var scriptDocuments = contentDocument.querySelectorAll('script');
+    var scripts = scriptDocuments;
+    scriptDocuments.forEach(function (script) {
+      script.remove();
+    });
+    return {
+      contentDocument: contentDocument,
+      scripts: scripts
+    };
+  },
+  getChildNo: function getChildNo(child, parent) {
+    return Array.from(parent.children).indexOf(child);
+  },
+  modalAndDrawerData: _defineProperty({
+    status: false,
+    contents: {},
+    isUnLock: true,
+    lock: function lock() {
+      this.isUnLock = false;
+    },
+    unLock: function unLock() {
+      this.isUnLock = true;
+    },
+    changeStatus: function changeStatus() {
+      var unLock = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      if (unLock || this.isUnLock) {
+        this.isUnLock = true;
+        this.status = !this.status;
+      }
+    },
+    setContent: function setContent(content) {
+      this.content = content;
+    },
+    setContentByApi: function setContentByApi(api, apiOptions) {
+      var _this = this;
+      var cacheKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      if (cacheKey && this.contents[cacheKey] !== undefined) {
+        this.setContent(this.contents[cacheKey]);
+      } else {
+        this.getContentArea().innerHTML = DoatKolomUiUtils.pulse;
+        fetch(api, apiOptions).then(function (res) {
+          return res.text();
+        }).then(function (content) {
+          return _this.prepareContent(content, cacheKey);
+        });
+      }
+    },
+    prepareContent: function prepareContent(content, cacheKey) {
+      if (cacheKey) {
+        this.contents[cacheKey] = content;
+      }
+      this.setContent(content);
+    },
+    pushData: function pushData(key, value) {
+      this[key] = value;
+    }
+  }, "setContent", function setContent(content) {
+    this.content = content;
+    var contentArea = this.getContentArea();
+    contentArea.innerHTML = '';
+    content = DoatKolomUiUtils.htmlToDocument(content);
+    contentArea.appendChild(content.contentDocument);
+    content.scripts.forEach(function (script) {
+      var scriptDocument = document.createElement("script");
+      scriptDocument.innerHTML = script.innerHTML;
+      contentArea.appendChild(scriptDocument);
+    });
+  })
+};
 var DoatKolomUi = {
-	Tab: function (tabIdentifiers, tabSettings, tabs) {
-		function TabFunction(tabIdentifiers, tabSettings, tabs) {
-			Alpine.data(tabIdentifiers.dataKey, () => ({
-				tabs: tabs,
-				tabId: tabIdentifiers.tabId,
-				tabSettings: tabSettings,
-				tabSelectedId: null,
-				tabContents: {},
-				isFetchingTabContent: false,
-				init() {
-					this.$nextTick(() => {
-						setTimeout(function () {
-							this.selectTab(this.$id(tabIdentifiers.tabId, tabSettings.tabSelectedId))
-						}.bind(this), 1)
-					})
-				},
-				selectTab(id) {
-					this.tabContent(id);
-					this.tabSelectedId = id
-				},
-				isTabSelected(id) { return this.tabSelectedId === id },
-				whichTabChild(el, parent) { return Array.from(parent.children).indexOf(el) },
-				getIndexFromId(id) {
-					return id.substr(id.length - 1)
-				},
-				tabContent(id) {
+  Tab: function Tab(tabIdentifiers, tabSettings, tabs) {
+    function TabFunction(tabIdentifiers, tabSettings, tabs) {
+      Alpine.data(tabIdentifiers.dataKey, function () {
+        return {
+          tabs: tabs,
+          tabId: tabIdentifiers.tabId,
+          tabSettings: tabSettings,
+          tabSelectedId: null,
+          tabContents: {},
+          isFetchingTabContent: false,
+          init: function init() {
+            var _this2 = this;
+            this.$nextTick(function () {
+              setTimeout(function () {
+                this.selectTab(this.$id(tabIdentifiers.tabId, tabSettings.tabSelectedId));
+              }.bind(_this2), 1);
+            });
+          },
+          selectTab: function selectTab(id) {
+            this.tabContent(id);
+            this.tabSelectedId = id;
+          },
+          isTabSelected: function isTabSelected(id) {
+            return this.tabSelectedId === id;
+          },
+          whichTabChild: function whichTabChild(el, parent) {
+            return Array.from(parent.children).indexOf(el);
+          },
+          getIndexFromId: function getIndexFromId(id) {
+            return id.substr(id.length - 1);
+          },
+          tabContent: function tabContent(id) {
+            if (!this.isFetchingTabContent) {
+              var index = parseInt(this.getIndexFromId(id)) - 1;
+              var tab = this.tabs[index];
+              var contentArea = document.querySelector("[aria-labelledby=\"".concat(id, "\"]"));
+              if (this.tabContents[index] === undefined) {
+                this.isFetchingTabContent = true;
+                if (tab.content_api) {
+                  contentArea.innerHTML = DoatKolomUiUtils.pulse;
+                  this.fetchTabContent(tab, index, contentArea);
+                } else {
+                  this.appendTabContent(tab.content, index, contentArea);
+                }
+              } else if (tab.content_api && tab.contentCache === false) {
+                this.isFetchingTabContent = true;
+                contentArea.innerHTML = DoatKolomUiUtils.pulse;
+                this.fetchTabContent(tab, index, contentArea);
+              }
+            }
+          },
+          fetchTabContent: function fetchTabContent(tab, index, contentArea) {
+            var _this3 = this;
+            fetch(tab.content_api, tab.contentApiOptions).then(function (res) {
+              return res.text();
+            }).then(function (content) {
+              _this3.appendTabContent(content, index, contentArea);
+            });
+          },
+          getTabPositionClasses: function getTabPositionClasses(elementName, classes) {
+            switch (this.tabSettings.position) {
+              case 'top':
+                if ('tab_button' == elementName) {
+                  return ' border-t border-l border-r rounded-t-md inline-flex ' + classes;
+                }
+              case 'left':
+                if ('tab_button' == elementName) {
+                  return ' border-t border-l border-b w-[calc(100%+1px)] text-left h-14 ' + classes;
+                }
+              default:
+                return classes;
+            }
+          },
+          appendTabContent: function appendTabContent(content, index, contentArea) {
+            contentArea.innerHTML = '';
+            content = DoatKolomUiUtils.htmlToDocument(content);
+            contentArea.appendChild(content.contentDocument);
+            content.scripts.forEach(function (script) {
+              var scriptDocument = document.createElement("script");
+              scriptDocument.innerHTML = script.innerHTML;
+              contentArea.appendChild(scriptDocument);
+            });
+            this.tabContents[index] = {
+              content: content,
+              is_fetch: true
+            };
+            this.isFetchingTabContent = false;
+          },
+          selectTabButtonClass: function selectTabButtonClass(id, tab) {
+            var _tab$classes2;
+            if (this.isTabSelected(id)) {
+              var _tab$classes;
+              return 'border-gray-200 bg-white ' + this.getTabPositionClasses('tab_button', tab === null || tab === void 0 ? void 0 : (_tab$classes = tab.classes) === null || _tab$classes === void 0 ? void 0 : _tab$classes.tab_button) + ' ' + this.tabSettings.classes.selectedButton;
+            }
+            return 'border-transparent ' + this.getTabPositionClasses('tab_button', tab === null || tab === void 0 ? void 0 : (_tab$classes2 = tab.classes) === null || _tab$classes2 === void 0 ? void 0 : _tab$classes2.tab_button);
+          }
+        };
+      });
 
-					if (!this.isFetchingTabContent) {
+      /**
+       * Keyboard focus
+       */
+      Alpine.bind(tabIdentifiers.tablistBind, function () {
+        var _ref;
+        return _ref = {}, _defineProperty(_ref, 'x-ref', 'tablist'), _defineProperty(_ref, '@keydown.right.prevent.stop', function keydownRightPreventStop() {
+          this.$focus.wrap().next();
+        }), _defineProperty(_ref, '@keydown.home.prevent.stop', function keydownHomePreventStop() {
+          this.$focus.first();
+        }), _defineProperty(_ref, '@keydown.page-up.prevent.stop', function keydownPageUpPreventStop() {
+          this.$focus.first();
+        }), _defineProperty(_ref, '@keydown.left.prevent.stop', function keydownLeftPreventStop() {
+          this.$focus.wrap().prev();
+        }), _defineProperty(_ref, '@keydown.end.prevent.stop', function keydownEndPreventStop() {
+          this.$focus.last();
+        }), _defineProperty(_ref, '@keydown.page-down.prevent.stop', function keydownPageDownPreventStop() {
+          this.$focus.last();
+        }), _ref;
+      });
 
-						var index = parseInt(this.getIndexFromId(id)) - 1;
-						var tab = this.tabs[index];
-						var contentArea = document.querySelector(`[aria-labelledby="${id}"]`);
+      /**
+       * Tab selector actions
+       */
+      Alpine.bind(tabIdentifiers.tablistButtonBind, function () {
+        var _ref2;
+        return _ref2 = {}, _defineProperty(_ref2, ':id', function id() {
+          return this.$id(tabIdentifiers.tabId, this.whichTabChild(this.$el.parentElement, this.$refs.tablist));
+        }), _defineProperty(_ref2, '@click', function click() {
+          this.selectTab(this.$el.id);
+        }), _defineProperty(_ref2, '@focus', function focus() {
+          this.selectTab(this.$el.id);
+        }), _defineProperty(_ref2, ':tabindex', function tabindex() {
+          return this.isTabSelected(this.$el.id) ? 0 : -1;
+        }), _defineProperty(_ref2, ':aria-selected', function ariaSelected() {
+          return this.isTabSelected(this.$el.id);
+        }), _ref2;
+      });
+    }
+    if (tabSettings.init) {
+      document.addEventListener('alpine:init', function () {
+        TabFunction(tabIdentifiers, tabSettings, tabs);
+      });
+    } else {
+      TabFunction(tabIdentifiers, tabSettings, tabs);
+    }
+  },
+  Accordion: function Accordion(identifiers, accordionSettings, items) {
+    function AccordionFunction() {
+      Alpine.data(identifiers.dataKey, function () {
+        return {
+          accordions: items,
+          activeAccordions: {},
+          accordionSettings: accordionSettings,
+          init: function init() {
+            this.activeAccordions = accordionSettings.activeItems;
+          },
+          isAccordionSelected: function isAccordionSelected(item_index) {
+            item_index = item_index + 1;
+            if (this.activeAccordions[item_index] !== undefined && this.activeAccordions[item_index] === true) {
+              return true;
+            }
+            return false;
+          },
+          getIndexFromId: function getIndexFromId(id) {
+            return id.substr(id.length - 1);
+          },
+          selectClickEvent: function selectClickEvent() {
+            var index = this.getIndexFromId(this.$el.id);
+            var is_selected = this.isAccordionSelected(index - 1);
+            if (!accordionSettings.multiple) {
+              this.activeAccordions = {};
+            }
+            this.activeAccordions[index] = !is_selected;
+          },
+          accordionWhichChild: function accordionWhichChild(el, parent) {
+            return Array.from(parent.children).indexOf(el);
+          }
+        };
+      });
+      Alpine.bind(identifiers.accordionListBind, function () {
+        return _defineProperty({}, 'x-ref', 'accordionList');
+      });
+      Alpine.bind(identifiers.accordionButtonBind, function () {
+        var _ref4;
+        return _ref4 = {}, _defineProperty(_ref4, ':id', function id() {
+          return this.$id(identifiers.accordionId, this.accordionWhichChild(this.$el.closest('.accordionItem'), this.$refs.accordionList));
+        }), _defineProperty(_ref4, '@click', function click() {
+          this.selectClickEvent();
+        }), _ref4;
+      });
+      Alpine.bind(identifiers.accordionCollapseButton, function () {
+        var _ref5;
+        return _ref5 = {}, _defineProperty(_ref5, ':id', function id() {
+          return this.$id(identifiers.accordionId, this.accordionWhichChild(this.$el.closest('.accordionItem'), this.$refs.accordionList));
+        }), _defineProperty(_ref5, '@click', function click() {
+          this.selectClickEvent();
+        }), _ref5;
+      });
+    }
+    if (accordionSettings.init) {
+      document.addEventListener('alpine:init', function () {
+        AccordionFunction(identifiers, accordionSettings, items);
+      });
+    } else {
+      AccordionFunction(identifiers, accordionSettings, items);
+    }
+  },
+  Notification: function Notification(identifiers, notificationSettings) {
+    function NotificationFunction(identifiers) {
+      Alpine.data(identifiers.dataKey, function () {
+        return {
+          notifications: [],
+          add: function add(e) {
+            this.notifications.push({
+              id: e.timeStamp,
+              type: e.detail.type,
+              content: e.detail.content
+            });
+          },
+          remove: function remove(notification) {
+            this.notifications = this.notifications.filter(function (i) {
+              return i.id !== notification.id;
+            });
+          }
+        };
+      });
+      Alpine.data(identifiers.notificationKey, function () {
+        return {
+          show: false,
+          init: function init() {
+            var _this4 = this;
+            this.$nextTick(function () {
+              return _this4.show = true;
+            });
+            setTimeout(function () {
+              return _this4.transitionOut();
+            }, 2500);
+          },
+          transitionOut: function transitionOut() {
+            var _this5 = this;
+            this.show = false;
+            setTimeout(function () {
+              return _this5.remove(_this5.notification);
+            }, 300);
+          }
+        };
+      });
+    }
+    if (notificationSettings.init) {
+      document.addEventListener('alpine:init', function () {
+        NotificationFunction(identifiers);
+      });
+    } else {
+      NotificationFunction(identifiers);
+    }
+  }
+};
 
-						if (this.tabContents[index] === undefined) {
-							this.isFetchingTabContent = true;
-							if (tab.content_api) {
-								contentArea.innerHTML = DoatKolomUiUtils.pulse;
-								this.fetchTabContent(tab, index, contentArea);
-							} else {
-								this.appendTabContent(tab.content, index, contentArea);
-							}
-						} else if (tab.content_api && tab.contentCache === false) {
-							this.isFetchingTabContent = true;
-							contentArea.innerHTML = DoatKolomUiUtils.pulse;
-							this.fetchTabContent(tab, index, contentArea);
-						}
-					}
-				},
-				fetchTabContent(tab, index, contentArea) {
-					fetch(tab.content_api, tab.contentApiOptions)
-						.then(res => res.text())
-						.then(content => {
-							this.appendTabContent(content, index, contentArea);
-						});
-				},
-				getTabPositionClasses(elementName, classes) {
-					switch (this.tabSettings.position) {
-						case 'top':
-							if ('tab_button' == elementName) {
-								return ' border-t border-l border-r rounded-t-md inline-flex ' + classes;
-							}
-						case 'left':
-							if ('tab_button' == elementName) {
-								return ' border-t border-l border-b w-[calc(100%+1px)] text-left h-14 ' + classes;
-							}
-						default:
-							return classes;
-					}
-				},
-				appendTabContent(content, index, contentArea) {
-					contentArea.innerHTML = '';
-					content = DoatKolomUiUtils.htmlToDocument(content);
-					contentArea.appendChild(content.contentDocument);
+/***/ }),
 
-					content.scripts.forEach(script => {
-						var scriptDocument = document.createElement("script");
-						scriptDocument.innerHTML = script.innerHTML;
-						contentArea.appendChild(scriptDocument);
-					});
+/***/ "./resources/sass/app.scss":
+/*!*********************************!*\
+  !*** ./resources/sass/app.scss ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-					this.tabContents[index] = { content, is_fetch: true };
-					this.isFetchingTabContent = false;
-				},
-				selectTabButtonClass(id, tab) {
-					if (this.isTabSelected(id)) {
-						return 'border-gray-200 bg-white ' + this.getTabPositionClasses('tab_button', tab?.classes?.tab_button) + ' ' + this.tabSettings.classes.selectedButton;
-					}
-					return 'border-transparent ' + this.getTabPositionClasses('tab_button', tab?.classes?.tab_button);
-				}
-			}))
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
 
-			/**
-			 * Keyboard focus
-			 */
-			Alpine.bind(tabIdentifiers.tablistBind, () => ({
-				['x-ref']: 'tablist',
-				['@keydown.right.prevent.stop']() { this.$focus.wrap().next() },
-				['@keydown.home.prevent.stop']() { this.$focus.first() },
-				['@keydown.page-up.prevent.stop']() { this.$focus.first() },
-				['@keydown.left.prevent.stop']() { this.$focus.wrap().prev() },
-				['@keydown.end.prevent.stop']() { this.$focus.last() },
-				['@keydown.page-down.prevent.stop']() { this.$focus.last() }
-			}))
 
-			/**
-			 * Tab selector actions
-			 */
-			Alpine.bind(tabIdentifiers.tablistButtonBind, () => ({
-				[':id']() {
-					return this.$id(tabIdentifiers.tabId, this.whichTabChild(this.$el.parentElement, this.$refs.tablist))
-				},
-				['@click']() {
-					this.selectTab(this.$el.id);
-				},
-				['@focus']() {
-					this.selectTab(this.$el.id)
-				},
-				[':tabindex']() { return this.isTabSelected(this.$el.id) ? 0 : -1 },
-				[':aria-selected']() { return this.isTabSelected(this.$el.id) },
-			}))
-		}
+/***/ })
 
-		if (tabSettings.init) {
-			document.addEventListener('alpine:init', () => {
-				TabFunction(tabIdentifiers, tabSettings, tabs)
-			});
-		} else {
-			TabFunction(tabIdentifiers, tabSettings, tabs)
-		}
-	},
-	Accordion: function (identifiers, accordionSettings, items) {
-		function AccordionFunction() {
-			Alpine.data(identifiers.dataKey, () => ({
-				accordions: items,
-				activeAccordions: {},
-				accordionSettings: accordionSettings,
-				init() {
-					this.activeAccordions = accordionSettings.activeItems;
-				},
-				isAccordionSelected(item_index) {
-					item_index = item_index + 1;
-					if (this.activeAccordions[item_index] !== undefined && this.activeAccordions[item_index] === true) {
-						return true;
-					}
-					return false;
-				},
-				getIndexFromId(id) {
-					return id.substr(id.length - 1)
-				},
-				selectClickEvent() {
-					var index = this.getIndexFromId(this.$el.id);
-					var is_selected = this.isAccordionSelected(index - 1);
-					if (!accordionSettings.multiple) {
-						this.activeAccordions = {};
-					}
-					this.activeAccordions[index] = !is_selected;
-				},
-				accordionWhichChild(el, parent) { return Array.from(parent.children).indexOf(el) },
-			}));
-			Alpine.bind(identifiers.accordionListBind, () => ({
-				['x-ref']: 'accordionList',
-			}))
-			Alpine.bind(identifiers.accordionButtonBind, () => ({
-				[':id']() {
-					return this.$id(identifiers.accordionId, this.accordionWhichChild(this.$el.closest('.accordionItem'), this.$refs.accordionList))
-				},
-				['@click']() {
-					this.selectClickEvent();
-				}
-			}))
-
-			Alpine.bind(identifiers.accordionCollapseButton, () => ({
-				[':id']() {
-					return this.$id(identifiers.accordionId, this.accordionWhichChild(this.$el.closest('.accordionItem'), this.$refs.accordionList))
-				},
-				['@click']() {
-					this.selectClickEvent();
-				}
-			}))
-		}
-
-		if (accordionSettings.init) {
-			document.addEventListener('alpine:init', () => {
-				AccordionFunction(identifiers, accordionSettings, items)
-			});
-		} else {
-			AccordionFunction(identifiers, accordionSettings, items)
-		}
-	},
-	Notification: function (identifiers, notificationSettings) {
-		function NotificationFunction(identifiers) {
-			Alpine.data(identifiers.dataKey, () => ({
-				notifications: [],
-				add(e) {
-					this.notifications.push({
-						id: e.timeStamp,
-						type: e.detail.type,
-						content: e.detail.content
-					})
-				},
-				remove(notification) {
-					this.notifications = this.notifications.filter(i => i.id !== notification.id)
-				}
-			}))
-			Alpine.data(identifiers.notificationKey, () => ({
-				show: false,
-				init() {
-					this.$nextTick(() => this.show = true)
-					setTimeout(() => this.transitionOut(), 2500)
-				},
-				transitionOut() {
-					this.show = false;
-					setTimeout(() => this.remove(this.notification), 300)
-				},
-			}))
-		}
-
-		if (notificationSettings.init) {
-			document.addEventListener('alpine:init', () => {
-				NotificationFunction(identifiers)
-			});
-		} else {
-			NotificationFunction(identifiers)
-		}
-	}
-}
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					var r = fn();
+/******/ 					if (r !== undefined) result = r;
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"/assets/js/doatkolom-ui": 0,
+/******/ 			"assets/css/app": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 			return __webpack_require__.O(result);
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = self["webpackChunkdoatkolom_ui"] = self["webpackChunkdoatkolom_ui"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	__webpack_require__.O(undefined, ["assets/css/app"], () => (__webpack_require__("./resources/js/doatkolom-ui.js")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["assets/css/app"], () => (__webpack_require__("./resources/sass/app.scss")))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	
+/******/ })()
+;
