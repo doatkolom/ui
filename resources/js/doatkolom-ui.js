@@ -1,4 +1,4 @@
-var DoatKolomUiUtils = {
+window.DoatKolomUiUtils = {
 	pulse: `<div class="p-8 w-full mx-auto">
 	<div class="animate-pulse flex space-x-4">
 		<div class="rounded-full bg-slate-200 h-10 w-10"></div>
@@ -36,7 +36,7 @@ var DoatKolomUiUtils = {
 			this.isUnLock = true
 		},
 		changeStatus(unLock = false) {
-			if(unLock || this.isUnLock) {
+			if (unLock || this.isUnLock) {
 				this.isUnLock = true;
 				this.status = !this.status;
 			}
@@ -74,8 +74,9 @@ var DoatKolomUiUtils = {
 			});
 		}
 	}
-}
-var DoatKolomUi = {
+};
+
+window.DoatKolomUi = {
 	Tab: function (tabIdentifiers, tabSettings, tabs) {
 		function TabFunction(tabIdentifiers, tabSettings, tabs) {
 			Alpine.data(tabIdentifiers.dataKey, () => ({

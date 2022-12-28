@@ -11,7 +11,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var DoatKolomUiUtils = {
+window.DoatKolomUiUtils = {
   pulse: "<div class=\"p-8 w-full mx-auto\">\n\t<div class=\"animate-pulse flex space-x-4\">\n\t\t<div class=\"rounded-full bg-slate-200 h-10 w-10\"></div>\n\t\t<div class=\"flex-1 space-y-6 py-1\">\n\t\t\t<div class=\"h-2 bg-slate-200 rounded\"></div>\n\t\t\t<div class=\"space-y-3\">\n\t\t\t\t<div class=\"grid grid-cols-3 gap-4\">\n\t\t\t\t\t<div class=\"h-2 bg-slate-200 rounded col-span-2\"></div>\n\t\t\t\t\t<div class=\"h-2 bg-slate-200 rounded col-span-1\"></div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"h-2 bg-slate-200 rounded\"></div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>",
   htmlToDocument: function htmlToDocument(html) {
     var contentDocument = document.createElement("div");
@@ -85,7 +85,7 @@ var DoatKolomUiUtils = {
     });
   })
 };
-var DoatKolomUi = {
+window.DoatKolomUi = {
   Tab: function Tab(tabIdentifiers, tabSettings, tabs) {
     function TabFunction(tabIdentifiers, tabSettings, tabs) {
       Alpine.data(tabIdentifiers.dataKey, function () {
