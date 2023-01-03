@@ -41,6 +41,14 @@ window.DoatKolomUiUtils = {
 				this.status = !this.status;
 			}
 		},
+		clickOutSide() {
+			if (this.overrideOutSideClick()) {
+				this.changeStatus();
+			}
+		},
+		overrideOutSideClick() {
+			return true;
+		},
 		setContent(content) {
 			this.content = content;
 		},
@@ -301,5 +309,131 @@ window.DoatKolomUi = {
 		} else {
 			NotificationFunction(identifiers)
 		}
+	},
+	DkUiModalSubmit: function () {
+		Alpine.data('DkUiModalSubmit', () => ({
+			sendRequestStatus: false,
+			formData: {},
+			headers: { 'X-WP-Nonce': SuperDocsSettings.nonce },
+			method: 'POST',
+			api: '',
+			sendRequest() {
+				let alpineThis = this;
+				alpineThis.sendRequestStatus = true;
+				var modal = Alpine.store('DoatKolomUiModal');
+				modal.lock();
+				jQuery.ajax({
+					url: alpineThis.api,
+					method: alpineThis.method,
+					headers: alpineThis.headers,
+					data: alpineThis.formData,
+					success: function (data) {
+						alpineThis.$dispatch('notify', { content: data.message, type: 'success' })
+						alpineThis.sendRequestStatus = false;
+						modal.changeStatus(true);
+						location.reload();
+					},
+					error: function (data) {
+						alpineThis.$dispatch('notify', { content: data.responseJSON.message, type: 'error' });
+						alpineThis.sendRequestStatus = false;
+						modal.changeStatus(true);
+					}
+				})
+			}
+		}));
+	},
+	Input: function () {
+		Alpine.data('DoatKolomUiInput', () => ({
+			name: '',
+			value: '',
+			input: {
+				['x-model']: 'value',
+				'@keyup'() {
+					this.formData[this.name] = this.value;
+				}
+			}
+		}));
+	},
+	Select2: function () {
+		Alpine.data('DoatKolomUiSelect2', () => ({
+			api: '',
+			multiple: false,
+			options: [],
+			name: '',
+			value: '',
+			select2Init() {
+				if (this.api && 0 !== this.api.length) {
+					this.ajaxSelect()
+				} else {
+					this.select()
+				}
+				jQuery(this.$refs.select2).on('change', () => {
+					let currentSelection = jQuery(this.$refs.select2).select2('data');
+					this.value = this.multiple ? currentSelection.map(i => i.id) : currentSelection[0].id;
+					this.formData[this.name] = this.value;
+				});
+			},
+			select() {
+				let ids = this.multiple ? this.value : [this.value];
+				jQuery(this.$refs.select2).select2({
+					multiple: this.multiple,
+					data: this.options.map(i => ({
+						id: i.id,
+						text: i.text,
+						selected: ids.map(i => String(i)).includes(String(i.id)),
+					})),
+				});
+			},
+			ajaxSelect() {
+				let select = (defaultData = []) => jQuery(this.$refs.select2).select2({
+					multiple: this.multiple,
+					dropdownParent: jQuery('.create-modal'),
+					ajax: {
+						delay: 500,
+						url: this.api,
+						headers: {
+							'X-WP-Nonce': SuperDocsSettings.nonce
+						},
+						data: function (params) {
+							let search = '';
+							if (params.term) {
+								search = params.term;
+							}
+							return { search };
+						},
+						processResults: function (data) {
+							return { results: data };
+						}
+					},
+					data: defaultData
+				});
+				if (0 !== this.value.length) {
+					let ids = this.multiple ? this.value : [this.value];
+					ids = ids.join(',');
+					jQuery.ajax({
+						url: this.api,
+						data: { ids },
+						headers: {
+							'X-WP-Nonce': SuperDocsSettings.nonce
+						},
+						success: function (data) {
+							data = data.map(i => {
+								i.selected = true;
+								return i;
+							})
+							select(data)
+						}
+					})
+				} else {
+					select();
+				}
+			}
+		}));
 	}
 }
+
+document.addEventListener('alpine:init', () => {
+	DoatKolomUi.DkUiModalSubmit();
+	DoatKolomUi.Input();
+	DoatKolomUi.Select2();
+});

@@ -26,15 +26,15 @@ class Modal extends ComponentBase
     public function content()
     {
 		?>
-		<div x-show="$store.DoatKolomUiModal.status" style="display: none" class="fixed inset-0 overflow-y-auto">
+		<div x-show="$store.DoatKolomUiModal.status"  style="display: none" class="fixed inset-0 overflow-y-auto">
 			<div x-show="$store.DoatKolomUiModal.status" x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50"></div>
 
 			<div x-show="$store.DoatKolomUiModal.status" x-transition
 				class="relative flex min-h-screen items-center justify-center p-4">
 				<div
-					x-on:click.outside="$store.DoatKolomUiModal.changeStatus()"
+					x-on:click.outside="$store.DoatKolomUiModal.clickOutSide()"
 				 	x-trap.noscroll.inert="$store.DoatKolomUiModal.status"
-					class="doatkolom-ui-modal-content relative w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-4 shadow-lg">
+					class="doatkolom-ui-modal-content relative w-full max-w-2xl rounded-xl bg-white p-4 shadow-lg">
 				</div>
 			</div>
 		</div>
