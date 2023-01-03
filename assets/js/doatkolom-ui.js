@@ -46,6 +46,14 @@ window.DoatKolomUiUtils = {
         this.status = !this.status;
       }
     },
+    clickOutSide: function clickOutSide() {
+      if (this.overrideOutSideClick()) {
+        this.changeStatus();
+      }
+    },
+    overrideOutSideClick: function overrideOutSideClick() {
+      return true;
+    },
     setContent: function setContent(content) {
       this.content = content;
     },
@@ -340,8 +348,106 @@ window.DoatKolomUi = {
     } else {
       NotificationFunction(identifiers);
     }
+  },
+  Select2: function Select2() {
+    Alpine.data('DoatKolomUiSelect2', function () {
+      return {
+        api: '',
+        multiple: false,
+        options: [],
+        name: '',
+        value: '',
+        select2Init: function select2Init() {
+          var _this6 = this;
+          if (this.api && 0 !== this.api.length) {
+            this.ajaxSelect();
+          } else {
+            this.select();
+          }
+          jQuery(this.$refs.select2).on('change', function () {
+            var currentSelection = jQuery(_this6.$refs.select2).select2('data');
+            _this6.value = _this6.multiple ? currentSelection.map(function (i) {
+              return i.id;
+            }) : currentSelection[0].id;
+            _this6.formData[_this6.name] = _this6.value;
+          });
+        },
+        select: function select() {
+          var ids = this.multiple ? this.value : [this.value];
+          jQuery(this.$refs.select2).select2({
+            multiple: this.multiple,
+            data: this.options.map(function (i) {
+              return {
+                id: i.id,
+                text: i.text,
+                selected: ids.map(function (i) {
+                  return String(i);
+                }).includes(String(i.id))
+              };
+            })
+          });
+        },
+        ajaxSelect: function ajaxSelect() {
+          var _this7 = this;
+          var select = function select() {
+            var defaultData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+            return jQuery(_this7.$refs.select2).select2({
+              multiple: _this7.multiple,
+              dropdownParent: jQuery('.create-modal'),
+              ajax: {
+                delay: 500,
+                url: _this7.api,
+                headers: {
+                  'X-WP-Nonce': SuperDocsSettings.nonce
+                },
+                data: function data(params) {
+                  var search = '';
+                  if (params.term) {
+                    search = params.term;
+                  }
+                  return {
+                    search: search
+                  };
+                },
+                processResults: function processResults(data) {
+                  return {
+                    results: data
+                  };
+                }
+              },
+              data: defaultData
+            });
+          };
+          if (0 !== this.value.length) {
+            var ids = this.multiple ? this.value : [this.value];
+            ids = ids.join(',');
+            jQuery.ajax({
+              url: this.api,
+              data: {
+                ids: ids
+              },
+              headers: {
+                'X-WP-Nonce': SuperDocsSettings.nonce
+              },
+              success: function success(data) {
+                data = data.map(function (i) {
+                  i.selected = true;
+                  return i;
+                });
+                select(data);
+              }
+            });
+          } else {
+            select();
+          }
+        }
+      };
+    });
   }
 };
+document.addEventListener('alpine:init', function () {
+  DoatKolomUi.Select2();
+});
 
 /***/ }),
 
