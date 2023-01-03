@@ -349,6 +349,60 @@ window.DoatKolomUi = {
       NotificationFunction(identifiers);
     }
   },
+  DkUiModalSubmit: function DkUiModalSubmit() {
+    Alpine.data('DkUiModalSubmit', function () {
+      return {
+        sendRequestStatus: false,
+        formData: {},
+        headers: {
+          'X-WP-Nonce': SuperDocsSettings.nonce
+        },
+        method: 'POST',
+        api: '',
+        sendRequest: function sendRequest() {
+          var alpineThis = this;
+          alpineThis.sendRequestStatus = true;
+          var modal = Alpine.store('DoatKolomUiModal');
+          modal.lock();
+          jQuery.ajax({
+            url: alpineThis.api,
+            method: alpineThis.method,
+            headers: alpineThis.headers,
+            data: alpineThis.formData,
+            success: function success(data) {
+              alpineThis.$dispatch('notify', {
+                content: data.message,
+                type: 'success'
+              });
+              alpineThis.sendRequestStatus = false;
+              modal.changeStatus(true);
+              location.reload();
+            },
+            error: function error(data) {
+              alpineThis.$dispatch('notify', {
+                content: data.responseJSON.message,
+                type: 'error'
+              });
+              alpineThis.sendRequestStatus = false;
+              modal.changeStatus(true);
+            }
+          });
+        }
+      };
+    });
+  },
+  Input: function Input() {
+    Alpine.data('DoatKolomUiInput', function () {
+      var _input;
+      return {
+        name: '',
+        value: '',
+        input: (_input = {}, _defineProperty(_input, 'x-model', 'value'), _defineProperty(_input, '@keyup', function keyup() {
+          this.formData[this.name] = this.value;
+        }), _input)
+      };
+    });
+  },
   Select2: function Select2() {
     Alpine.data('DoatKolomUiSelect2', function () {
       return {
@@ -446,6 +500,8 @@ window.DoatKolomUi = {
   }
 };
 document.addEventListener('alpine:init', function () {
+  DoatKolomUi.DkUiModalSubmit();
+  DoatKolomUi.Input();
   DoatKolomUi.Select2();
 });
 

@@ -310,6 +310,50 @@ window.DoatKolomUi = {
 			NotificationFunction(identifiers)
 		}
 	},
+	DkUiModalSubmit: function () {
+		Alpine.data('DkUiModalSubmit', () => ({
+			sendRequestStatus: false,
+			formData: {},
+			headers: { 'X-WP-Nonce': SuperDocsSettings.nonce },
+			method: 'POST',
+			api: '',
+			sendRequest() {
+				let alpineThis = this;
+				alpineThis.sendRequestStatus = true;
+				var modal = Alpine.store('DoatKolomUiModal');
+				modal.lock();
+				jQuery.ajax({
+					url: alpineThis.api,
+					method: alpineThis.method,
+					headers: alpineThis.headers,
+					data: alpineThis.formData,
+					success: function (data) {
+						alpineThis.$dispatch('notify', { content: data.message, type: 'success' })
+						alpineThis.sendRequestStatus = false;
+						modal.changeStatus(true);
+						location.reload();
+					},
+					error: function (data) {
+						alpineThis.$dispatch('notify', { content: data.responseJSON.message, type: 'error' });
+						alpineThis.sendRequestStatus = false;
+						modal.changeStatus(true);
+					}
+				})
+			}
+		}));
+	},
+	Input: function () {
+		Alpine.data('DoatKolomUiInput', () => ({
+			name: '',
+			value: '',
+			input: {
+				['x-model']: 'value',
+				'@keyup'() {
+					this.formData[this.name] = this.value;
+				}
+			}
+		}));
+	},
 	Select2: function () {
 		Alpine.data('DoatKolomUiSelect2', () => ({
 			api: '',
@@ -389,5 +433,7 @@ window.DoatKolomUi = {
 }
 
 document.addEventListener('alpine:init', () => {
+	DoatKolomUi.DkUiModalSubmit();
+	DoatKolomUi.Input();
 	DoatKolomUi.Select2();
 });
