@@ -351,6 +351,10 @@ window.DoatKolomUi = {
 				'@keyup'() {
 					this.formData[this.name] = this.value;
 				}
+			},
+			setValue(value) {
+				this.formData[this.name] = value;
+				this.value = value;
 			}
 		}));
 	},
@@ -372,6 +376,10 @@ window.DoatKolomUi = {
 					this.value = this.multiple ? currentSelection.map(i => i.id) : currentSelection[0].id;
 					this.formData[this.name] = this.value;
 				});
+			},
+			setValue(value) {
+				this.formData[this.name] = value;
+				this.value = value;
 			},
 			select() {
 				let ids = this.multiple ? this.value : [this.value];
